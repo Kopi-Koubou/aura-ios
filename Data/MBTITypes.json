@@ -1,0 +1,409 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2026-02-04",
+    "source": "Curated synthesis of MBTI research"
+  },
+  "types": {
+    "INTJ": {
+      "name": "Architect",
+      "tagline": "Imaginative and strategic thinkers, with a plan for everything",
+      "traits": ["Analytical", "Independent", "Determined", "Forward-thinking"],
+      "strengths": [
+        "Strategic and long-term thinking",
+        "High standards and competence",
+        "Self-confident and decisive",
+        "Innovative problem-solving"
+      ],
+      "challenges": [
+        "May seem aloof or insensitive",
+        "Perfectionistic tendencies",
+        "Impatient with inefficiency",
+        "Difficulty expressing emotions"
+      ],
+      "careers": ["Strategist", "Systems Analyst", "Research Scientist", "Architect", "Investment Banker"],
+      "compatibility": {
+        "best": ["ENFP", "ENTP"],
+        "good": ["INTJ", "INFJ", "INTP", "ENTJ"],
+        "challenging": ["ESFP", "ISFP"]
+      },
+      "description": "INTJs are analytical problem-solvers, eager to improve systems and processes with their innovative ideas. They have a talent for seeing possibilities for improvement, whether at work, at home, or in themselves.",
+      "famousExamples": ["Elon Musk", "Friedrich Nietzsche", "Isaac Newton", "Michelle Obama"]
+    },
+    "INTP": {
+      "name": "Logician",
+      "tagline": "Innovative inventors with an unquenchable thirst for knowledge",
+      "traits": ["Logical", "Original", "Open-minded", "Curious"],
+      "strengths": [
+        "Abstract and analytical thinking",
+        "Objective and honest",
+        "Imaginative and original",
+        "Enthusiastic about ideas"
+      ],
+      "challenges": [
+        "May be socially withdrawn",
+        "Insensitive to emotional needs",
+        "Prone to self-doubt",
+        "Difficulty with practical matters"
+      ],
+      "careers": ["Software Developer", "Mathematician", "Philosopher", "Researcher", "Data Scientist"],
+      "compatibility": {
+        "best": ["ENTJ", "ESTJ"],
+        "good": ["INTP", "INFP", "INTJ", "INFJ"],
+        "challenging": ["ESFJ", "ISFJ"]
+      },
+      "description": "INTPs are philosophical innovators, fascinated by logical analysis, systems, and design. They are preoccupied with theory, and search for the universal law behind everything they see.",
+      "famousExamples": ["Albert Einstein", "Bill Gates", "Isaac Asimov", "Marie Curie"]
+    },
+    "ENTJ": {
+      "name": "Commander",
+      "tagline": "Bold, imaginative and strong-willed leaders, always finding a way",
+      "traits": ["Efficient", "Energetic", "Self-confident", "Strategic"],
+      "strengths": [
+        "Natural leadership abilities",
+        "Efficient and energetic",
+        "Strategic vision",
+        "Charismatic and inspiring"
+      ],
+      "challenges": [
+        "Impatient and domineering",
+        "Intolerant of inefficiency",
+        "May be overly critical",
+        "Difficulty with emotions"
+      ],
+      "careers": ["Executive", "Entrepreneur", "Management Consultant", "Lawyer", "University Professor"],
+      "compatibility": {
+        "best": ["INTP", "INTJ"],
+        "good": ["ENTJ", "ENTP", "ENFJ", "ENFP"],
+        "challenging": ["ISFP", "INFP"]
+      },
+      "description": "ENTJs are natural-born leaders. People with this personality type embody the gifts of charisma and confidence, projecting authority in a way that draws crowds together behind a common goal.",
+      "famousExamples": ["Steve Jobs", "Gordon Ramsay", "Margaret Thatcher", "Franklin D. Roosevelt"]
+    },
+    "ENTP": {
+      "name": "Debater",
+      "tagline": "Smart and curious thinkers who cannot resist an intellectual challenge",
+      "traits": ["Knowledgeable", "Quick-thinking", "Original", "Charismatic"],
+      "strengths": [
+        "Excellent brainstorming",
+        "Quick and versatile thinking",
+        "Charismatic and energetic",
+        "Fearless in challenges"
+      ],
+      "challenges": [
+        "Argumentative",
+        "Insensitive to feelings",
+        "Difficulty focusing",
+        "Impatient with routine"
+      ],
+      "careers": ["Entrepreneur", "Attorney", "Creative Director", "Management Consultant", "Inventor"],
+      "compatibility": {
+        "best": ["INFJ", "INTJ"],
+        "good": ["ENTP", "ENFP", "ENTJ", "ENFJ"],
+        "challenging": ["ISFJ", "ESFJ"]
+      },
+      "description": "ENTPs are inspired innovators, motivated to find new solutions to intellectually challenging problems. They are curious and clever, and seek to comprehend the people, systems, and principles around them.",
+      "famousExamples": ["Thomas Edison", "Mark Twain", "Tom Hanks", "Celine Dion"]
+    },
+    "INFJ": {
+      "name": "Advocate",
+      "tagline": "Quiet and mystical, yet very inspiring and tireless idealists",
+      "traits": ["Insightful", "Principled", "Passionate", "Altruistic"],
+      "strengths": [
+        "Creative and insightful",
+        "Inspiring and convincing",
+        "Determined and passionate",
+        "Altruistic and principled"
+      ],
+      "challenges": [
+        "Perfectionistic",
+        "Prone to burnout",
+        "Difficulty with criticism",
+        "Private and reserved"
+      ],
+      "careers": ["Counselor", "Writer", "Psychologist", "HR Manager", "Non-profit Director"],
+      "compatibility": {
+        "best": ["ENFP", "ENTP"],
+        "good": ["INFJ", "INFP", "INTJ", "INTP"],
+        "challenging": ["ESTP", "ESTJ"]
+      },
+      "description": "INFJs are quiet visionaries, often serving as inspiring and tireless idealists. They are caring and complex individuals who approach life with depth and intention.",
+      "famousExamples": ["Martin Luther King Jr.", "Nelson Mandela", "Lady Gaga", "Oprah Winfrey"]
+    },
+    "INFP": {
+      "name": "Mediator",
+      "tagline": "Poetic, kind and altruistic people, always eager to help a good cause",
+      "traits": ["Empathetic", "Creative", "Idealistic", "Loyal"],
+      "strengths": [
+        "Empathetic and caring",
+        "Generous and open-minded",
+        "Creative and passionate",
+        "Loyal to values"
+      ],
+      "challenges": [
+        "Overly idealistic",
+        "Self-critical",
+        "Impractical",
+        "Difficult to get to know"
+      ],
+      "careers": ["Writer", "Counselor", "Graphic Designer", "Musician", "Social Worker"],
+      "compatibility": {
+        "best": ["ENFJ", "ENTJ"],
+        "good": ["INFP", "INFJ", "INTP", "ISFP"],
+        "challenging": ["ESTJ", "ENTJ"]
+      },
+      "description": "INFPs are poetic, kind altruists who are always eager to help a good cause. They are guided by their principles, and seek meaning and purpose in all aspects of their lives.",
+      "famousExamples": ["William Shakespeare", "J.R.R. Tolkien", "Bjork", "John Lennon"]
+    },
+    "ENFJ": {
+      "name": "Protagonist",
+      "tagline": "Charismatic and inspiring leaders, able to mesmerize their listeners",
+      "traits": ["Charismatic", "Altruistic", "Natural Leaders", "Reliable"],
+      "strengths": [
+        "Natural leadership",
+        "Charismatic and inspiring",
+        "Reliable and altruistic",
+        "Excellent communication"
+      ],
+      "challenges": [
+        "Overly idealistic",
+        "Too selfless",
+        "Sensitive to criticism",
+        "Struggles with decisions"
+      ],
+      "careers": ["Teacher", "Sales Manager", "HR Director", "Politician", "Coach"],
+      "compatibility": {
+        "best": ["INFP", "ISFP"],
+        "good": ["ENFJ", "ENTJ", "ENFP", "ENTP"],
+        "challenging": ["ISTP", "INTP"]
+      },
+      "description": "ENFJs are natural-born leaders, full of passion and charisma. They are altruistic and dedicated to helping others grow, often taking on mentoring roles.",
+      "famousExamples": ["Barack Obama", "Oprah Winfrey", "Martin Luther King Jr.", "Jennifer Lawrence"]
+    },
+    "ENFP": {
+      "name": "Campaigner",
+      "tagline": "Enthusiastic, creative and sociable free spirits, who can always find a reason to smile",
+      "traits": ["Energetic", "Creative", "Sociable", "Open-minded"],
+      "strengths": [
+        "Enthusiastic and creative",
+        "Sociable and popular",
+        "Excellent communication",
+        "Natural curiosity"
+      ],
+      "challenges": [
+        "Poor practical skills",
+        "Find it difficult to focus",
+        "Overthink things",
+        "Get stressed easily"
+      ],
+      "careers": ["Journalist", "Actor", "Consultant", "Marketing Manager", "Entrepreneur"],
+      "compatibility": {
+        "best": ["INFJ", "INTJ"],
+        "good": ["ENFP", "ENTP", "ENFJ", "ENTJ"],
+        "challenging": ["ISTJ", "ISFJ"]
+      },
+      "description": "ENFPs are enthusiastic, creative free spirits who can always find a reason to smile. They are warm, passionate, and imaginative, seeing life as full of possibilities.",
+      "famousExamples": ["Robin Williams", "Walt Disney", "Ellen DeGeneres", "Robert Downey Jr."]
+    },
+    "ISTJ": {
+      "name": "Logistician",
+      "tagline": "Practical and fact-minded individuals, whose reliability cannot be doubted",
+      "traits": ["Responsible", "Reliable", "Practical", "Honest"],
+      "strengths": [
+        "Strong sense of duty",
+        "Highly organized",
+        "Reliable and practical",
+        "Calm and methodical"
+      ],
+      "challenges": [
+        "Stubborn",
+        "Insensitive to emotions",
+        "Judgmental",
+        "Overly focused on details"
+      ],
+      "careers": ["Accountant", "Military Officer", "Auditor", "Manager", "Judge"],
+      "compatibility": {
+        "best": ["ESFP", "ESTP"],
+        "good": ["ISTJ", "ISFJ", "INTJ", "ISTP"],
+        "challenging": ["ENFP", "ENTP"]
+      },
+      "description": "ISTJs are practical and fact-minded individuals, whose reliability cannot be doubted. They are responsible organizers, driven to create and enforce order within systems and institutions.",
+      "famousExamples": ["Angela Merkel", "George Washington", "Queen Elizabeth II", "Warren Buffett"]
+    },
+    "ISFJ": {
+      "name": "Defender",
+      "tagline": "Very dedicated and warm protectors, always ready to defend their loved ones",
+      "traits": ["Supportive", "Reliable", "Patient", "Detail-oriented"],
+      "strengths": [
+        "Supportive and reliable",
+        "Patient and practical",
+        "Observant of details",
+        "Enthusiastic when helping"
+      ],
+      "challenges": [
+        "Humble and shy",
+        "Take things personally",
+        "Repress feelings",
+        "Overload themselves"
+      ],
+      "careers": ["Nurse", "Teacher", "Administrator", "Social Worker", "HR Specialist"],
+      "compatibility": {
+        "best": ["ESFP", "ESTP"],
+        "good": ["ISFJ", "ISTJ", "INFJ", "INTJ"],
+        "challenging": ["ENTP", "ENFP"]
+      },
+      "description": "ISFJs are dedicated and warm protectors, always ready to defend their loved ones. They are industrious caretakers, loyal to traditions and organizations.",
+      "famousExamples": ["Queen Elizabeth II", "Beyonce", "Vincent van Gogh", "Captain America"]
+    },
+    "ESTJ": {
+      "name": "Executive",
+      "tagline": "Excellent administrators, unsurpassed at managing things or people",
+      "traits": ["Organized", "Dedicated", "Direct", "Traditional"],
+      "strengths": [
+        "Strong organizational skills",
+        "Dedicated and reliable",
+        "Direct and honest",
+        "Loyal and patient"
+      ],
+      "challenges": [
+        "Inflexible",
+        "Uncomfortable with unconventional situations",
+        "Judgmental",
+        "Difficulty expressing emotions"
+      ],
+      "careers": ["Manager", "Judge", "Financial Officer", "Sales Manager", "School Administrator"],
+      "compatibility": {
+        "best": ["ISFP", "ISTP"],
+        "good": ["ESTJ", "ESFJ", "ENTJ", "ENFJ"],
+        "challenging": ["INFP", "INFJ"]
+      },
+      "description": "ESTJs are excellent administrators, unsurpassed at managing things or people. They are traditional and value honesty, dedication, and dignity.",
+      "famousExamples": ["John D. Rockefeller", "Judge Judy", "James Monroe", "George Washington"]
+    },
+    "ESFJ": {
+      "name": "Consul",
+      "tagline": "Extraordinarily caring, social and popular people, always eager to help",
+      "traits": ["Caring", "Social", "Popular", "Reliable"],
+      "strengths": [
+        "Strong practical skills",
+        "Loyal and sensitive",
+        "Warm and caring",
+        "Good at connecting people"
+      ],
+      "challenges": [
+        "Worried about social status",
+        "Inflexible",
+        "Reluctant to innovate",
+        "Vulnerable to criticism"
+      ],
+      "careers": ["Nurse", "Teacher", "Social Worker", "HR Manager", "Event Coordinator"],
+      "compatibility": {
+        "best": ["ISFP", "ISTP"],
+        "good": ["ESFJ", "ESTJ", "ENFJ", "ENTJ"],
+        "challenging": ["INTP", "INTJ"]
+      },
+      "description": "ESFJs are extraordinarily caring, social, and popular people, always eager to help. They are attentive and people-focused, enjoying participating in their social community.",
+      "famousExamples": ["Taylor Swift", "Bill Clinton", "Jennifer Garner", "Terry Crews"]
+    },
+    "ISTP": {
+      "name": "Virtuoso",
+      "tagline": "Bold and practical experimenters, masters of all kinds of tools",
+      "traits": ["Practical", "Observant", "Spontaneous", "Relaxed"],
+      "strengths": [
+        "Optimistic and energetic",
+        "Creative and practical",
+        "Spontaneous and rational",
+        "Great in crisis"
+      ],
+      "challenges": [
+        "Stubborn",
+        "Insensitive",
+        "Private and reserved",
+        "Easily bored"
+      ],
+      "careers": ["Engineer", "Mechanic", "Pilot", "Forensic Scientist", "Athlete"],
+      "compatibility": {
+        "best": ["ESFJ", "ESTJ"],
+        "good": ["ISTP", "ISFP", "INTP", "INTJ"],
+        "challenging": ["ENFJ", "INFJ"]
+      },
+      "description": "ISTPs are bold and practical experimenters, masters of all kinds of tools. They are tolerant and friendly, preferring action to conversation.",
+      "famousExamples": ["Clint Eastwood", "Tom Cruise", "Michael Jordan", "Amelia Earhart"]
+    },
+    "ISFP": {
+      "name": "Adventurer",
+      "tagline": "Flexible and charming artists, always ready to explore and experience something new",
+      "traits": ["Charming", "Sensitive", "Artistic", "Curious"],
+      "strengths": [
+        "Charming and easy to be around",
+        "Sensitive to others",
+        "Imaginative and artistic",
+        "Passionate and curious"
+      ],
+      "challenges": [
+        "Fiercely independent",
+        "Unpredictable",
+        "Easily stressed",
+        "Overly competitive"
+      ],
+      "careers": ["Artist", "Musician", "Photographer", "Designer", "Veterinarian"],
+      "compatibility": {
+        "best": ["ESFJ", "ESTJ"],
+        "good": ["ISFP", "ISTP", "INFP", "INFJ"],
+        "challenging": ["ENTJ", "ESTJ"]
+      },
+      "description": "ISFPs are flexible and charming artists, always ready to explore and experience something new. They are gentle caretakers who live in the present moment.",
+      "famousExamples": ["Michael Jackson", "Britney Spears", "John Travolta", "Lana Del Rey"]
+    },
+    "ESTP": {
+      "name": "Entrepreneur",
+      "tagline": "Smart, energetic and very perceptive people, who truly enjoy living on the edge",
+      "traits": ["Energetic", "Perceptive", "Direct", "Spontaneous"],
+      "strengths": [
+        "Bold and direct",
+        "Rational and practical",
+        "Original and perceptive",
+        "Excellent people skills"
+      ],
+      "challenges": [
+        "Impatient",
+        "Risk-prone",
+        "Unstructured",
+        "May miss the bigger picture"
+      ],
+      "careers": ["Entrepreneur", "Sales Representative", "Paramedic", "Athlete", "Marketing Director"],
+      "compatibility": {
+        "best": ["ISFJ", "ISTJ"],
+        "good": ["ESTP", "ESFP", "ENTP", "ENFP"],
+        "challenging": ["INFJ", "INFP"]
+      },
+      "description": "ESTPs are smart, energetic, and very perceptive people who truly enjoy living on the edge. They are action-oriented and focus on immediate results.",
+      "famousExamples": ["Madonna", "Ernest Hemingway", "Jack Nicholson", "Theodore Roosevelt"]
+    },
+    "ESFP": {
+      "name": "Entertainer",
+      "tagline": "Spontaneous, energetic and enthusiastic people - life is never boring around them",
+      "traits": ["Spontaneous", "Energetic", "Enthusiastic", "Playful"],
+      "strengths": [
+        "Bold and original",
+        "Excellent people skills",
+        "Aesthetically aware",
+        "Observant and practical"
+      ],
+      "challenges": [
+        "Sensitive",
+        "Conflict-averse",
+        "Easily bored",
+        "Poor long-term planners"
+      ],
+      "careers": ["Actor", "Sales Representative", "Event Planner", "Fashion Designer", "Consultant"],
+      "compatibility": {
+        "best": ["ISFJ", "ISTJ"],
+        "good": ["ESFP", "ESTP", "ENFP", "ENTP"],
+        "challenging": ["INTJ", "INFJ"]
+      },
+      "description": "ESFPs are spontaneous, energetic, and enthusiastic people—life is never boring around them. They love being the center of attention and enjoy simple pleasures.",
+      "famousExamples": ["Marilyn Monroe", "Adele", "Jamie Oliver", "Miley Cyrus"]
+    }
+  }
+}

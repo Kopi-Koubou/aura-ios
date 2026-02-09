@@ -1,0 +1,37 @@
+# Build artifacts
+.build/
+*.xcarchive
+*.ipa
+*.app
+derivedData/
+DerivedData/
+
+# Xcode
+*.xcuserdata
+*.xcworkspace/xcuserdata
+*.playground
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# CocoaPods
+Pods/
+*.lock
+
+# Carthage
+Carthage/Build/
+Carthage/Checkouts/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Misc
+.DS_Store
+*.log
+.env
+.env.local
+node_modules/

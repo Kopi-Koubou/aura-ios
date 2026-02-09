@@ -1,0 +1,88 @@
+# Supabase Configuration for Aura Project
+# This file configures the Supabase project settings
+
+project_id = "aura-prod"
+
+[api]
+# Port to use for Supabase API
+port = 54321
+# Schemas to expose in your API
+schemas = ["public", "storage", "graphql_public"]
+# Extra schemas to add to the search_path of every request
+extra_search_path = ["public", "extensions"]
+# Maximum rows to return from a table or view
+max_rows = 1000
+
+[db]
+# Port to use for local database
+port = 54322
+# Shadow port to use for local database
+shadow_port = 54320
+# Major version of PostgreSQL
+major_version = 15
+
+[db.pooler]
+enabled = false
+port = 54329
+pool_mode = "transaction"
+default_pool_size = 20
+max_client_conn = 100
+
+[realtime]
+enabled = true
+
+[studio]
+# Port to use for Supabase Studio
+port = 54323
+# External URL of the API server that frontend connects to
+api_url = "http://127.0.0.1"
+
+[inbucket]
+enabled = true
+port = 54324
+smtp_port = 54325
+pop3_port = 54326
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+site_url = "https://aura.xadev.com"
+additional_redirect_urls = ["https://aura.xadev.com/auth/callback"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = true
+
+[auth.external.github]
+enabled = true
+client_id = "env(GITHUB_CLIENT_ID)"
+secret = "env(GITHUB_SECRET)"
+redirect_uri = "https://aura-prod.supabase.co/auth/v1/callback"
+
+[edge_runtime]
+enabled = true
+inspector_port = 8083
+
+[functions]
+# Directory for Edge Functions
+function_dir = "./functions"
+
+[functions.referral-redeem]
+verify_jwt = true
+
+[functions.track-share]
+verify_jwt = false
+
+[functions.validate-receipt]
+verify_jwt = true
+
+[functions.sync-subscription]
+verify_jwt = false

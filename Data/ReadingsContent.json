@@ -1,0 +1,1056 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2026-02-04",
+    "description": "Pre-written content for MVP - 4 top MBTI types x 7 days x 5 situations",
+    "mbtiTypes": ["INTJ", "ENFP", "ISTJ", "ESFJ"],
+    "daysOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    "situations": ["Career", "Love", "Social", "Health", "Personal Growth"]
+  },
+  "readings": {
+    "INTJ": {
+      "Monday": {
+        "Career": {
+          "title": "Strategic Clarity",
+          "content": "Your analytical mind cuts through workplace complexity today. A long-term project reaches a critical planning phase. Trust your systems thinking—others may not see the full picture yet, but your vision is sound. Document your strategy for stakeholders.",
+          "advice": "Schedule a 30-minute solo planning session before lunch.",
+          "luckyNumber": 7,
+          "powerColor": "Deep Navy"
+        },
+        "Love": {
+          "title": "Emotional Architecture",
+          "content": "Your partner may seek more emotional connection than usual. While logic is your native language, try translating your feelings into words. Small gestures of vulnerability strengthen bonds more than grand strategic plans.",
+          "advice": "Share one feeling before sharing one solution.",
+          "luckyNumber": 3,
+          "powerColor": "Charcoal Grey"
+        },
+        "Social": {
+          "title": "Selective Engagement",
+          "content": "Social demands compete with your need for solitude. You don't need to attend every gathering. Choose one meaningful interaction over three surface-level encounters. Quality over quantity applies to relationships too.",
+          "advice": "Decline one invitation without guilt.",
+          "luckyNumber": 11,
+          "powerColor": "Midnight Blue"
+        },
+        "Health": {
+          "title": "System Optimization",
+          "content": "Your body is sending data—are you listening? A persistent fatigue signal suggests your sleep architecture needs attention. Apply your systems thinking to your health: track, analyze, optimize.",
+          "advice": "Set a consistent sleep schedule this week.",
+          "luckyNumber": 4,
+          "powerColor": "Forest Green"
+        },
+        "Personal Growth": {
+          "title": "Intellectual Expansion",
+          "content": "A new subject captures your curiosity. Don't just collect information—build a framework for understanding. Your strength lies in connecting disparate concepts into coherent systems.",
+          "advice": "Create a mind map of a topic you're learning.",
+          "luckyNumber": 22,
+          "powerColor": "Royal Purple"
+        }
+      },
+      "Tuesday": {
+        "Career": {
+          "title": "Efficiency Audit",
+          "content": "Today's productivity scan reveals optimization opportunities. A process you've accepted as standard contains unnecessary steps. Your fresh perspective identifies what others have normalized. Propose the streamlining—diplomatically.",
+          "advice": "Challenge one 'that's how we've always done it' assumption.",
+          "luckyNumber": 8,
+          "powerColor": "Steel Grey"
+        },
+        "Love": {
+          "title": "Calculated Risks",
+          "content": "Romance requires uncertainty—your least favorite variable. Today, practice embracing the unknown in your relationship. A spontaneous gesture, however small, disrupts predictable patterns in a positive way.",
+          "advice": "Plan something unplanned for your partner.",
+          "luckyNumber": 5,
+          "powerColor": "Burgundy"
+        },
+        "Social": {
+          "title": "Network Intelligence",
+          "content": "A connection made today has long-term strategic value. You're not networking—you're building a knowledge ecosystem. One conversation seeds future collaborations. Be genuinely curious, not transactional.",
+          "advice": "Ask someone about their passion project.",
+          "luckyNumber": 14,
+          "powerColor": "Slate Blue"
+        },
+        "Health": {
+          "title": "Mental Load Management",
+          "content": "Your mental RAM is at capacity. Cognitive load from unfinished projects drains energy reserves. The solution isn't more productivity—it's strategic completion. Clear your mental cache by finishing one lingering task.",
+          "advice": "Complete one thing you've been procrastinating.",
+          "luckyNumber": 6,
+          "powerColor": "Olive Green"
+        },
+        "Personal Growth": {
+          "title": "Competence Expansion",
+          "content": "A skill gap becomes apparent. Rather than delegating, consider developing this competency yourself. Your capacity for deep learning transforms weaknesses into strengths. Mastery is your addiction—feed it wisely.",
+          "advice": "Identify one skill to develop over the next 30 days.",
+          "luckyNumber": 17,
+          "powerColor": "Indigo"
+        }
+      },
+      "Wednesday": {
+        "Career": {
+          "title": "Vision Validation",
+          "content": "Your long-term strategy faces scrutiny today. Critics focus on immediate obstacles while you see the horizon. Don't dismiss their concerns—address them within your larger framework. Skepticism strengthens sound plans.",
+          "advice": "Prepare three answers to 'what if' questions.",
+          "luckyNumber": 9,
+          "powerColor": "Charcoal"
+        },
+        "Love": {
+          "title": "Intimacy Infrastructure",
+          "content": "Deep connection requires maintenance, not just intention. Your relationship systems need an upgrade. A scheduled date night isn't unromantic—it's ensuring quality connection amid busy lives. Build the architecture for love.",
+          "advice": "Calendar recurring quality time with your partner.",
+          "luckyNumber": 2,
+          "powerColor": "Deep Teal"
+        },
+        "Social": {
+          "title": "Selective Disclosure",
+          "content": "Someone presses for more openness than you're comfortable providing. Your privacy isn't secrecy—it's boundaries. Share strategically, not reflexively. Not everyone deserves access to your inner world.",
+          "advice": "Practice saying 'I'm not comfortable discussing that yet.'",
+          "luckyNumber": 13,
+          "powerColor": "Dark Grey"
+        },
+        "Health": {
+          "title": "Performance Metrics",
+          "content": "Objective health data tells a story your subjective feelings might miss. Numbers don't lie—track something measurable today. Your analytical approach to wellness yields better results than trendy wellness fads.",
+          "advice": "Log one health metric you've been ignoring.",
+          "luckyNumber": 1,
+          "powerColor": "Navy Blue"
+        },
+        "Personal Growth": {
+          "title": "Philosophical Integration",
+          "content": "A belief system you've held requires examination. Your evolving self demands updated mental models. Questioning isn't betrayal of principles—it's intellectual integrity. Revise your personal operating system.",
+          "advice": "Write down one belief you've outgrown.",
+          "luckyNumber": 19,
+          "powerColor": "Plum"
+        }
+      },
+      "Thursday": {
+        "Career": {
+          "title": "Systems Implementation",
+          "content": "Theory becomes practice today. A framework you've designed moves to execution phase. The transition from abstract to concrete tests your ideas. Stay flexible—reality always diverges from the blueprint.",
+          "advice": "Build in buffer time for unexpected complications.",
+          "luckyNumber": 10,
+          "powerColor": "Gunmetal"
+        },
+        "Love": {
+          "title": "Future Planning",
+          "content": "Relationship milestones appear on the horizon. Your natural long-term thinking serves partnership goals well. Share your vision with your partner—their input strengthens the plan. Together, architect your shared future.",
+          "advice": "Initiate one future-focused conversation.",
+          "luckyNumber": 16,
+          "powerColor": "Midnight"
+        },
+        "Social": {
+          "title": "Authentic Influence",
+          "content": "Your expertise is sought after today. Resist the urge to perform competence—offer genuine insight instead. Your quiet authority carries more weight than charismatic persuasion. Let wisdom speak louder than personality.",
+          "advice": "Share one insight without trying to impress.",
+          "luckyNumber": 21,
+          "powerColor": "Graphite"
+        },
+        "Health": {
+          "title": "Stress Pattern Analysis",
+          "content": "Today's tension reveals a recurring trigger. Your analytical mind can dissect stress patterns others merely feel. Identify the root cause, not just the symptom. Systemic solutions outperform coping mechanisms.",
+          "advice": "Map your stress triggers to their underlying causes.",
+          "luckyNumber": 7,
+          "powerColor": "Pine Green"
+        },
+        "Personal Growth": {
+          "title": "Knowledge Synthesis",
+          "content": "Disparate learning converges into insight. Your mind naturally connects across domains. A breakthrough awaits at the intersection of unrelated subjects. Follow your curiosity without immediate utility in mind.",
+          "advice": "Explore a topic completely unrelated to your work.",
+          "luckyNumber": 33,
+          "powerColor": "Deep Violet"
+        }
+      },
+      "Friday": {
+        "Career": {
+          "title": "Week Closure",
+          "content": "As the work week concludes, resist the urge to cram in unfinished tasks. Strategic rest is part of sustainable performance. Your best insights often arrive during deliberate downtime. Protect your cognitive recovery.",
+          "advice": "Set a hard stop time and honor it completely.",
+          "luckyNumber": 5,
+          "powerColor": "Dark Blue"
+        },
+        "Love": {
+          "title": "Weekend Connection",
+          "content": "Friday energy invites playful intimacy. Your serious nature benefits from lighthearted moments. Let go of the week's strategic thinking—be present instead of planning. Spontaneity strengthens bonds too.",
+          "advice": "Plan absolutely nothing for tomorrow morning.",
+          "luckyNumber": 12,
+          "powerColor": "Crimson"
+        },
+        "Social": {
+          "title": "Quality Selection",
+          "content": "Weekend social invitations accumulate. Your energy is finite—budget it wisely. One deep conversation nourishes more than five casual encounters. Choose presence over presence at events.",
+          "advice": "Accept one invitation, decline the rest gracefully.",
+          "luckyNumber": 18,
+          "powerColor": "Smoke Grey"
+        },
+        "Health": {
+          "title": "Recovery Protocol",
+          "content": "Your body enters recovery mode. The week's accumulated stress requires intentional release. Sleep, movement, and nutrition form your restoration triad. Prioritize recovery with the rigor you apply to productivity.",
+          "advice": "Create a Friday evening wind-down ritual.",
+          "luckyNumber": 8,
+          "powerColor": "Emerald"
+        },
+        "Personal Growth": {
+          "title": "Week Review",
+          "content": "Before diving into weekend plans, reflect on the week's learnings. What worked? What failed? What surprised you? Your growth accelerates when you close loops and extract lessons systematically.",
+          "advice": "Journal three insights from this week.",
+          "luckyNumber": 28,
+          "powerColor": "Amethyst"
+        }
+      },
+      "Saturday": {
+        "Career": {
+          "title": "Passive Processing",
+          "content": "Career challenges dissolve during weekend distance. Your subconscious continues working while you rest. A solution that eluded you all week may surface during Saturday's shower or walk. Trust your background processing.",
+          "advice": "Go for a walk without any work thoughts—see what emerges.",
+          "luckyNumber": 15,
+          "powerColor": "Silver Grey"
+        },
+        "Love": {
+          "title": "Adventurous Intimacy",
+          "content": "Saturday invites shared exploration. Break routine with your partner—new experiences create bonding neurochemistry. Your relationship benefits from novel stimuli as much as your individual mind does.",
+          "advice": "Try something neither of you has done before.",
+          "luckyNumber": 6,
+          "powerColor": "Ruby"
+        },
+        "Social": {
+          "title": "Deep Connection",
+          "content": "Weekend conversations can achieve depth weekday small talk cannot. One friend needs your particular wisdom today. Your advice, when sought, cuts through complexity with precision. Offer your clarity generously.",
+          "advice": "Reach out to a friend you haven't spoken to in depth recently.",
+          "luckyNumber": 24,
+          "powerColor": "Charcoal Black"
+        },
+        "Health": {
+          "title": "Physical Exploration",
+          "content": "Your body craves movement variety. The week's structured exercise gives way to playful physicality. Try something that doesn't feel like a workout—hiking, dancing, rock climbing. Joyful movement restores best.",
+          "advice": "Do physical activity purely for enjoyment, not fitness goals.",
+          "luckyNumber": 3,
+          "powerColor": "Jade"
+        },
+        "Personal Growth": {
+          "title": "Creative Expression",
+          "content": "Analytical minds need creative outlets too. Today, create without purpose. Write, build, paint, compose—without utility in mind. Your rationality is a tool, not your identity. Let your irrational side breathe.",
+          "advice": "Spend one hour on pure creative play.",
+          "luckyNumber": 11,
+          "powerColor": "Royal Blue"
+        }
+      },
+      "Sunday": {
+        "Career": {
+          "title": "Strategic Preparation",
+          "content": "Sunday evening invites light preparation for the week ahead. Not full planning mode—just mental orientation. A 10-minute preview prevents Monday morning chaos. Set intentions without rigid schedules.",
+          "advice": "List Monday's top three priorities only.",
+          "luckyNumber": 4,
+          "powerColor": "Dark Slate"
+        },
+        "Love": {
+          "title": "Renewal Rituals",
+          "content": "The week's end offers relationship renewal. Reflect together on shared experiences. Gratitude for your partnership strengthens its foundation. Small appreciations accumulate into deep commitment.",
+          "advice": "Share one specific thing you appreciate about your partner.",
+          "luckyNumber": 9,
+          "powerColor": "Maroon"
+        },
+        "Social": {
+          "title": "Solitude Recharge",
+          "content": "Social battery depleted, you need restorative solitude. Sunday evenings are sacred protection against Monday demands. Honor your introversion without apology. Your relationships benefit from your well-rested self.",
+          "advice": "Block two hours of complete alone time.",
+          "luckyNumber": 20,
+          "powerColor": "Onyx"
+        },
+        "Health": {
+          "title": "Holistic Assessment",
+          "content": "The week's wellness data reveals patterns. Energy levels, sleep quality, mood fluctuations—they tell a story. Adjust next week's habits based on this intelligence. Your health is a system to optimize.",
+          "advice": "Note one habit to adjust for next week.",
+          "luckyNumber": 2,
+          "powerColor": "Sage"
+        },
+        "Personal Growth": {
+          "title": "Integration Day",
+          "content": "Knowledge without application remains theoretical. Sunday invites integrating this week's insights into identity. Who are you becoming? Your growth isn't what you know—it's who you are.",
+          "advice": "Write one sentence describing your evolving self.",
+          "luckyNumber": 31,
+          "powerColor": "Deep Indigo"
+        }
+      }
+    },
+    "ENFP": {
+      "Monday": {
+        "Career": {
+          "title": "Fresh Start Energy",
+          "content": "Monday's blank canvas excites your creative spirit. New week, new possibilities! Channel this enthusiasm into one concrete action before the energy disperses. Your ideas need grounding to materialize.",
+          "advice": "Pick your wildest idea from the weekend and take one step toward it.",
+          "luckyNumber": 1,
+          "powerColor": "Sunshine Yellow"
+        },
+        "Love": {
+          "title": "Playful Connection",
+          "content": "Your natural warmth brightens your partner's Monday. Spontaneous affection and genuine curiosity about their day creates intimacy. Don't overthink—just be your naturally charming self.",
+          "advice": "Send a random, sweet message midday for no reason.",
+          "luckyNumber": 7,
+          "powerColor": "Coral"
+        },
+        "Social": {
+          "title": "Magnetic Monday",
+          "content": "Your energy draws people in today. Conversations spark effortlessly, ideas flow freely. One casual chat might lead to unexpected collaboration. Follow your curiosity without forcing outcomes.",
+          "advice": "Say yes to one spontaneous conversation invitation.",
+          "luckyNumber": 11,
+          "powerColor": "Tangerine"
+        },
+        "Health": {
+          "title": "Movement Joy",
+          "content": "Rigid exercise routines bore you. Today's fitness should feel like play, not obligation. Dance, sports, adventure—anything that makes you forget you're exercising. Joy is the best workout motivator.",
+          "advice": "Try a completely new physical activity today.",
+          "luckyNumber": 5,
+          "powerColor": "Lime Green"
+        },
+        "Personal Growth": {
+          "title": "Possibility Scan",
+          "content": "Your mind naturally sees opportunities everywhere. This week, focus depth over breadth. One meaningful pursuit beats ten shallow interests. Your challenge isn't finding passion—it's choosing among them.",
+          "advice": "Commit to one project for the next 30 days.",
+          "luckyNumber": 22,
+          "powerColor": "Vivid Pink"
+        }
+      },
+      "Tuesday": {
+        "Career": {
+          "title": "Collaborative Spark",
+          "content": "Team brainstorming sessions are your natural habitat. Your ability to build on others' ideas creates innovation magic. One wild suggestion from you unlocks breakthrough thinking in the group.",
+          "advice": "Share your most unconventional idea in today's meeting.",
+          "luckyNumber": 3,
+          "powerColor": "Bright Orange"
+        },
+        "Love": {
+          "title": "Curious Deep Dive",
+          "content": "Your partner has depths you haven't explored. Today's genuine curiosity reveals new dimensions of their personality. Ask questions you haven't asked before. Discovery keeps relationships alive.",
+          "advice": "Ask your partner about a childhood memory you've never heard.",
+          "luckyNumber": 8,
+          "powerColor": "Hot Pink"
+        },
+        "Social": {
+          "title": "Network Expansion",
+          "content": "A chance encounter opens unexpected doors. Your openness to strangers is a superpower. That person in line, at the coffee shop, in the elevator—anyone could become meaningful. Stay accessible.",
+          "advice": "Start a conversation with someone you normally wouldn't.",
+          "luckyNumber": 14,
+          "powerColor": "Electric Blue"
+        },
+        "Health": {
+          "title": "Emotional Check-in",
+          "content": "Your emotional intensity affects physical wellbeing. Today's mood fluctuations need acknowledgment, not suppression. Name your feelings, move your body, connect with someone. Emotional health is physical health.",
+          "advice": "Do a 5-minute mood check and name three emotions you're feeling.",
+          "luckyNumber": 6,
+          "powerColor": "Turquoise"
+        },
+        "Personal Growth": {
+          "title": "Pattern Recognition",
+          "content": "Recurring themes in your life demand attention. What keeps showing up? Your enthusiasm often outruns reflection. Pause to notice patterns—they're guideposts to your authentic path.",
+          "advice": "Journal about a pattern that keeps repeating in your life.",
+          "luckyNumber": 17,
+          "powerColor": "Magenta"
+        }
+      },
+      "Wednesday": {
+        "Career": {
+          "title": "Creative Problem-Solving",
+          "content": "A workplace challenge seems impossible to others. Your lateral thinking sees solutions invisible to linear minds. Don't dismiss your unconventional approach—it's exactly what's needed.",
+          "advice": "Present your solution even if it seems 'too out there.'",
+          "luckyNumber": 9,
+          "powerColor": "Golden Yellow"
+        },
+        "Love": {
+          "title": "Spontaneous Romance",
+          "content": "Routine threatens relationship vitality. Shake things up with unexpected playfulness. Surprise doesn't require grand gestures—just breaking predictable patterns. Spontaneity is your love language.",
+          "advice": "Plan a surprise mini-date for tonight.",
+          "luckyNumber": 2,
+          "powerColor": "Rose"
+        },
+        "Social": {
+          "title": "Bridge Building",
+          "content": "Your gift for connecting people serves everyone today. Two friends should meet—you're the natural introducer. Facilitating connections multiplies your social impact effortlessly.",
+          "advice": "Introduce two people in your network who should know each other.",
+          "luckyNumber": 13,
+          "powerColor": "Sky Blue"
+        },
+        "Health": {
+          "title": "Restless Energy",
+          "content": "Your mind races faster than your body can follow. Ground today's scattered energy through physical movement. Walk while you think, stretch during calls. Integration beats compartmentalization.",
+          "advice": "Take three walking breaks throughout the day.",
+          "luckyNumber": 1,
+          "powerColor": "Aqua"
+        },
+        "Personal Growth": {
+          "title": "Values Clarification",
+          "content": "So many options, but what truly matters? Your FOMO spreads you thin across too many pursuits. Core values are your decision filter. Get clear on what you actually care about.",
+          "advice": "List your top 3 values and check recent decisions against them.",
+          "luckyNumber": 19,
+          "powerColor": "Violet"
+        }
+      },
+      "Thursday": {
+        "Career": {
+          "title": "Follow-Through Focus",
+          "content": "Your idea generation exceeds your completion rate. Today, resist starting anything new. Finish one lingering project instead. The satisfaction of completion fuels future creativity better than fresh starts.",
+          "advice": "Complete one thing from your 'someday' list before starting anything new.",
+          "luckyNumber": 10,
+          "powerColor": "Amber"
+        },
+        "Love": {
+          "title": "Emotional Presence",
+          "content": "Your partner needs your full attention today. Your mind naturally wanders to exciting possibilities—gently bring it back. Presence is the greatest gift you can offer. Be here, fully.",
+          "advice": "Put away all devices during your next conversation.",
+          "luckyNumber": 16,
+          "powerColor": "Peach"
+        },
+        "Social": {
+          "title": "Authentic Expression",
+          "content": "Social masks feel heavy today. Your genuine enthusiasm is more attractive than any performance. Let your natural exuberance shine—it's contagious and deeply connecting.",
+          "advice": "Share something you're genuinely excited about without filtering.",
+          "luckyNumber": 21,
+          "powerColor": "Cerulean"
+        },
+        "Health": {
+          "title": "Sensory Awareness",
+          "content": "Your rich inner world sometimes disconnects from bodily signals. Today's practice: full sensory immersion. Taste your food, feel your feet, notice colors. Embodiment grounds your boundless imagination.",
+          "advice": "Eat one meal slowly, noticing every flavor and texture.",
+          "luckyNumber": 7,
+          "powerColor": "Teal"
+        },
+        "Personal Growth": {
+          "title": "Focus Practice",
+          "content": "Scattered attention dilutes your considerable gifts. One hour of deep focus beats a day of distracted multitasking. Build your concentration muscle gradually. Depth awaits on the other side of discipline.",
+          "advice": "Try 25 minutes of uninterrupted focus on one task.",
+          "luckyNumber": 33,
+          "powerColor": "Lavender"
+        }
+      },
+      "Friday": {
+        "Career": {
+          "title": "Week Celebration",
+          "content": "Friday energy calls for recognition of week's wins. Your achievements deserve acknowledgment—don't just rush to weekend plans. Celebrate progress, however incremental. Joy fuels sustainable success.",
+          "advice": "List three things you accomplished this week.",
+          "luckyNumber": 5,
+          "powerColor": "Canary Yellow"
+        },
+        "Love": {
+          "title": "Weekend Excitement",
+          "content": "Friday anticipation is almost as fun as the weekend itself. Share your excitement with your partner—planning together builds joint anticipation. Two excited people multiply the joy.",
+          "advice": "Plan tomorrow's adventure together tonight.",
+          "luckyNumber": 12,
+          "powerColor": "Salmon"
+        },
+        "Social": {
+          "title": "Social Butterfly Mode",
+          "content": "Weekend social possibilities abound. Your energy is high, your enthusiasm contagious. Choose quality connections over quantity. One meaningful conversation beats five surface-level chats.",
+          "advice": "Pick one event where you can have deep conversations.",
+          "luckyNumber": 18,
+          "powerColor": "Azure"
+        },
+        "Health": {
+          "title": "Weekend Wind-Down",
+          "content": "The week's accumulated stimulation needs release. Friday evening rituals signal your nervous system to shift gears. Transition intentionally from work mode to restoration mode.",
+          "advice": "Create a Friday evening ritual that marks the weekend boundary.",
+          "luckyNumber": 8,
+          "powerColor": "Mint Green"
+        },
+        "Personal Growth": {
+          "title": "Joy Audit",
+          "content": "What brought you genuine joy this week? Not obligation, not achievement—pure delight. Your growth path should include more of these moments. Joy isn't indulgence; it's navigation.",
+          "advice": "Schedule one purely joyful activity for next week.",
+          "luckyNumber": 28,
+          "powerColor": "Fuchsia"
+        }
+      },
+      "Saturday": {
+        "Career": {
+          "title": "Passion Project",
+          "content": "Work that doesn't feel like work calls to you. Side projects, creative pursuits, volunteer opportunities—explore what energizes rather than depletes. Your best career insights often come from play.",
+          "advice": "Spend two hours on something you're passionate about, with no outcome goal.",
+          "luckyNumber": 15,
+          "powerColor": "Lemon Yellow"
+        },
+        "Love": {
+          "title": "Adventure Together",
+          "content": "Shared novel experiences create relationship glue. Do something neither of you has done before. The shared vulnerability of being beginners together deepens bonds.",
+          "advice": "Try a new activity together where you're both beginners.",
+          "luckyNumber": 6,
+          "powerColor": "Watermelon"
+        },
+        "Social": {
+          "title": "Social Exploration",
+          "content": "New social circles expand your worldview. A gathering outside your usual crowd offers fresh perspectives. Your adaptability serves you well—dive into unfamiliar social waters.",
+          "advice": "Attend one event where you won't know anyone.",
+          "luckyNumber": 24,
+          "powerColor": "Ocean Blue"
+        },
+        "Health": {
+          "title": "Playful Movement",
+          "content": "Exercise as obligation drains your spirit. Saturday movement should feel like childhood play. Chase, climb, dance, explore—reclaim movement as joy rather than fitness obligation.",
+          "advice": "Do physical activity that feels like play, not exercise.",
+          "luckyNumber": 3,
+          "powerColor": "Spring Green"
+        },
+        "Personal Growth": {
+          "title": "Creative Flow",
+          "content": "Unstructured time invites your best creative work. No agenda, no outcome, just expression. Your ideas need space to breathe. Saturday is your canvas—paint freely.",
+          "advice": "Create something without planning or editing—just flow.",
+          "luckyNumber": 11,
+          "powerColor": "Periwinkle"
+        }
+      },
+      "Sunday": {
+        "Career": {
+          "title": "Inspired Planning",
+          "content": "Sunday evening invites gentle preparation without pressure. Your creative mind can envision the week ahead playfully. Set intentions loosely—rigid schedules suffocate your spontaneity.",
+          "advice": "Create a 'week ahead' vision board rather than a strict schedule.",
+          "luckyNumber": 4,
+          "powerColor": "Maize"
+        },
+        "Love": {
+          "title": "Reconnection Ritual",
+          "content": "The week's busy-ness may have created distance. Sunday offers slow, unhurried reconnection. No agenda, just presence. Quality time without performance or planning.",
+          "advice": "Spend two hours together with absolutely no agenda or devices.",
+          "luckyNumber": 9,
+          "powerColor": "Blush"
+        },
+        "Social": {
+          "title": "Selective Restoration",
+          "content": "Social energy depleted, you need restorative solitude. Sunday is permission to decline invitations guilt-free. Your social charm returns faster when you honor your recovery needs.",
+          "advice": "Give yourself permission to cancel one obligation today.",
+          "luckyNumber": 20,
+          "powerColor": "Powder Blue"
+        },
+        "Health": {
+          "title": "Holistic Renewal",
+          "content": "Mind, body, spirit—all need Sunday attention. Your wellness isn't compartmentalized. Gentle movement, nourishing food, inspiring content, meaningful connection. Feed all dimensions.",
+          "advice": "Do one thing for physical, mental, and emotional health today.",
+          "luckyNumber": 2,
+          "powerColor": "Seafoam"
+        },
+        "Personal Growth": {
+          "title": "Week Integration",
+          "content": "Before diving into next week's possibilities, absorb this week's experiences. What shifted? What surprised you? Your rapid growth needs integration time. Slow down to speed up.",
+          "advice": "Write one insight from each day of the past week.",
+          "luckyNumber": 31,
+          "powerColor": "Orchid"
+        }
+      }
+    },
+    "ISTJ": {
+      "Monday": {
+        "Career": {
+          "title": "Systematic Start",
+          "content": "Monday's structure comforts your organized nature. Lists, schedules, and clear priorities create a foundation for the week's success. Your methodical approach prevents the chaos others experience.",
+          "advice": "Create your weekly task list before checking email.",
+          "luckyNumber": 4,
+          "powerColor": "Navy Blue"
+        },
+        "Love": {
+          "title": "Reliable Presence",
+          "content": "Your partner values your dependability above grand gestures. Monday's quiet support—preparing coffee, sending a check-in text—speaks your love language. Consistency is romance.",
+          "advice": "Do one small, reliable thing your partner can count on this week.",
+          "luckyNumber": 8,
+          "powerColor": "Forest Green"
+        },
+        "Social": {
+          "title": "Selective Engagement",
+          "content": "Quality over quantity in your social approach. One meaningful conversation nourishes more than a room full of small talk. Choose your interactions deliberately.",
+          "advice": "Reach out to one person you genuinely want to connect with.",
+          "luckyNumber": 12,
+          "powerColor": "Charcoal"
+        },
+        "Health": {
+          "title": "Routine Foundation",
+          "content": "Your health thrives on consistency. Monday sets the pattern for the week. Sleep schedule, meal timing, exercise slot—establish the structure that supports your wellbeing.",
+          "advice": "Set your sleep and wake times for the entire week right now.",
+          "luckyNumber": 6,
+          "powerColor": "Olive"
+        },
+        "Personal Growth": {
+          "title": "Skill Mastery",
+          "content": "Incremental improvement compounds over time. Your patience with the learning process serves you well. What skill deserves your steady attention this week?",
+          "advice": "Commit to 15 minutes of deliberate practice on one skill daily.",
+          "luckyNumber": 15,
+          "powerColor": "Burgundy"
+        }
+      },
+      "Tuesday": {
+        "Career": {
+          "title": "Steady Progress",
+          "content": "While others chase shiny distractions, you maintain focus on what matters. Today's steady effort moves projects forward without drama. Your reliability is your professional superpower.",
+          "advice": "Check off one important but non-urgent task that's been waiting.",
+          "luckyNumber": 2,
+          "powerColor": "Midnight Blue"
+        },
+        "Love": {
+          "title": "Practical Support",
+          "content": "Your love shows through action, not words. Tuesday's practical help—fixing something, handling logistics, remembering details—demonstrates care more than poetry ever could.",
+          "advice": "Take care of one practical task your partner has been avoiding.",
+          "luckyNumber": 10,
+          "powerColor": "Dark Green"
+        },
+        "Social": {
+          "title": "Deepening Bonds",
+          "content": "Surface-level socializing drains you. One trusted friend over casual acquaintances every time. Today's investment in a meaningful relationship pays long-term dividends.",
+          "advice": "Schedule quality time with your closest friend this week.",
+          "luckyNumber": 14,
+          "powerColor": "Slate"
+        },
+        "Health": {
+          "title": "Disciplined Movement",
+          "content": "You don't need motivation—you need a schedule. Tuesday's workout happens because it's on the calendar, not because you feel like it. This discipline separates you from those who quit.",
+          "advice": "Schedule all workouts for the rest of the week right now.",
+          "luckyNumber": 7,
+          "powerColor": "Pine"
+        },
+        "Personal Growth": {
+          "title": "Knowledge Application",
+          "content": "Reading without implementation is entertainment. What have you learned that awaits application? Your growth accelerates when knowledge meets action.",
+          "advice": "Apply one concept from something you read recently.",
+          "luckyNumber": 18,
+          "powerColor": "Maroon"
+        }
+      },
+      "Wednesday": {
+        "Career": {
+          "title": "Process Optimization",
+          "content": "Your eye for inefficiency spots improvement opportunities others miss. A process that's 'always been done this way' contains wasted steps. Propose the streamlining your colleagues haven't noticed.",
+          "advice": "Document one process that could be improved, with specific suggestions.",
+          "luckyNumber": 3,
+          "powerColor": "Indigo"
+        },
+        "Love": {
+          "title": "Loyal Devotion",
+          "content": "Your commitment runs deeper than dramatic declarations. Wednesday's quiet loyalty—showing up, following through, being present—is the bedrock of lasting love.",
+          "advice": "Express your commitment through one consistent action this week.",
+          "luckyNumber": 11,
+          "powerColor": "Emerald"
+        },
+        "Social": {
+          "title": "Trusted Circle",
+          "content": "Your social energy is finite and precious. Invest it in those who've earned your trust. One deep conversation with a true friend outweighs a dozen casual encounters.",
+          "advice": "Call someone who's been a reliable friend to you.",
+          "luckyNumber": 16,
+          "powerColor": "Gunmetal"
+        },
+        "Health": {
+          "title": "Preventive Care",
+          "content": "Your forward-thinking serves health maintenance well. Small habits today prevent big problems tomorrow. What preventive practice have you been postponing?",
+          "advice": "Schedule any overdue health check-up or preventive screening.",
+          "luckyNumber": 9,
+          "powerColor": "Hunter Green"
+        },
+        "Personal Growth": {
+          "title": "Tradition Evaluation",
+          "content": "You respect established wisdom, but not blindly. Which traditions serve you? Which hold you back? Discernment between timeless principles and outdated customs.",
+          "advice": "Question one tradition or habit you've never examined.",
+          "luckyNumber": 21,
+          "powerColor": "Plum"
+        }
+      },
+      "Thursday": {
+        "Career": {
+          "title": "Quality Assurance",
+          "content": "Details others miss jump out at you. Your thoroughness catches errors before they become problems. Today's careful review prevents tomorrow's crisis. Precision is your contribution.",
+          "advice": "Review one important document with extra attention to detail.",
+          "luckyNumber": 5,
+          "powerColor": "Deep Blue"
+        },
+        "Love": {
+          "title": "Steady Devotion",
+          "content": "Grand romantic gestures aren't your style, but your daily dependability builds unshakeable trust. Thursday's quiet presence reinforces what words cannot express.",
+          "advice": "Do something small but thoughtful that your partner can depend on.",
+          "luckyNumber": 13,
+          "powerColor": "Teal"
+        },
+        "Social": {
+          "title": "Meaningful Exchange",
+          "content": "Small talk exhausts; substance energizes. Seek conversations with depth and purpose. Your thoughtful questions elicit authentic responses. Quality dialogue over quantity of connections.",
+          "advice": "Have one conversation about something that actually matters to you.",
+          "luckyNumber": 19,
+          "powerColor": "Steel"
+        },
+        "Health": {
+          "title": "Consistent Habits",
+          "content": "Your strength is repetition. The same healthy breakfast, the same walking route, the same bedtime—this consistency builds results. Don't fix what isn't broken.",
+          "advice": "Identify one healthy habit to make even more consistent.",
+          "luckyNumber": 8,
+          "powerColor": "Moss"
+        },
+        "Personal Growth": {
+          "title": "Patient Persistence",
+          "content": "Progress feels slow, but you're building something solid. Your methodical approach outperforms quick fixes. Trust the process you've committed to.",
+          "advice": "Measure progress on a goal you started 30+ days ago.",
+          "luckyNumber": 24,
+          "powerColor": "Wine"
+        }
+      },
+      "Friday": {
+        "Career": {
+          "title": "Week Completion",
+          "content": "The week's loose ends demand attention. Your sense of duty won't allow unfinished business to linger over the weekend. Close the loops methodically.",
+          "advice": "Clear your inbox and task list before leaving work today.",
+          "luckyNumber": 1,
+          "powerColor": "Sapphire"
+        },
+        "Love": {
+          "title": "Weekend Rituals",
+          "content": "Shared routines strengthen bonds. Friday evening traditions with your partner—takeout and a movie, a walk, cooking together—create relationship anchors.",
+          "advice": "Establish or honor one Friday tradition with your partner.",
+          "luckyNumber": 17,
+          "powerColor": "Jade"
+        },
+        "Social": {
+          "title": "Restorative Solitude",
+          "content": "The week's social demands have depleted your reserves. Friday evening solitude isn't rejection of others—it's restoration for yourself. Honor your introversion.",
+          "advice": "Block Friday evening for alone time without guilt.",
+          "luckyNumber": 22,
+          "powerColor": "Iron"
+        },
+        "Health": {
+          "title": "Recovery Routine",
+          "content": "The work week accumulates stress your body stores. Friday's transition rituals—early bedtime, gentle movement, light nutrition—set up weekend recovery.",
+          "advice": "Create a Friday evening wind-down routine and follow it.",
+          "luckyNumber": 4,
+          "powerColor": "Sage"
+        },
+        "Personal Growth": {
+          "title": "Week Review",
+          "content": "Before the week fades, capture its lessons. What worked? What failed? Your growth depends on this reflection. Data without analysis is just noise.",
+          "advice": "Write three sentences summarizing this week's key learning.",
+          "luckyNumber": 27,
+          "powerColor": "Crimson"
+        }
+      },
+      "Saturday": {
+        "Career": {
+          "title": "Skill Development",
+          "content": "Professional growth doesn't pause for weekends. Your dedication to competence serves Saturday study or practice. Mastery is built in the hours others spend purely relaxing.",
+          "advice": "Spend one hour developing a professional skill today.",
+          "luckyNumber": 6,
+          "powerColor": "Royal Blue"
+        },
+        "Love": {
+          "title": "Quality Time",
+          "content": "Unhurried Saturday hours with your partner rebuild connection. No agenda, no productivity—just presence. Your full attention is the gift.",
+          "advice": "Plan four hours of unscheduled time with your partner.",
+          "luckyNumber": 15,
+          "powerColor": "Mint"
+        },
+        "Social": {
+          "title": "Trusted Companion",
+          "content": "One reliable friend over many acquaintances. Saturday's investment in a deep relationship nourishes more than scattered socializing. Choose depth.",
+          "advice": "Spend time with your most trusted friend today.",
+          "luckyNumber": 20,
+          "powerColor": "Titanium"
+        },
+        "Health": {
+          "title": "Active Recovery",
+          "content": "Movement maintains your wellbeing, but doesn't require intensity. Saturday's walk, stretch, or gentle activity serves restoration. Consistency over intensity.",
+          "advice": "Do one hour of low-intensity physical activity you enjoy.",
+          "luckyNumber": 10,
+          "powerColor": "Basil"
+        },
+        "Personal Growth": {
+          "title": "Practical Application",
+          "content": "Theory serves practice. Saturday projects—building, repairing, organizing—ground abstract concepts in tangible results. Your learning needs doing.",
+          "advice": "Complete one practical project you've been planning.",
+          "luckyNumber": 25,
+          "powerColor": "Chestnut"
+        }
+      },
+      "Sunday": {
+        "Career": {
+          "title": "Strategic Preparation",
+          "content": "Sunday evening's quiet planning prevents Monday's chaos. Your methodical preparation—clothes laid out, meals prepped, tasks listed—creates smooth transitions.",
+          "advice": "Spend 30 minutes preparing for Monday before relaxing.",
+          "luckyNumber": 3,
+          "powerColor": "Cobalt"
+        },
+        "Love": {
+          "title": "Renewed Commitment",
+          "content": "The week's end invites reflection on partnership. Your steadfast nature appreciates the long view. Sunday's quiet appreciation reinforces bonds.",
+          "advice": "Share one thing you appreciate about your partner's reliability.",
+          "luckyNumber": 12,
+          "powerColor": "Celadon"
+        },
+        "Social": {
+          "title": "Restorative Isolation",
+          "content": "Social energy depleted, Sunday solitude restores. Preparation for the week's demands requires this recovery. Don't apologize for protecting your energy.",
+          "advice": "Give yourself full permission for Sunday solitude.",
+          "luckyNumber": 23,
+          "powerColor": "Pewter"
+        },
+        "Health": {
+          "title": "Week Planning",
+          "content": "Your health success depends on preparation. Sunday's meal planning, workout scheduling, and sleep routine setting creates the structure for success.",
+          "advice": "Plan all meals and workouts for the upcoming week now.",
+          "luckyNumber": 7,
+          "powerColor": "Thyme"
+        },
+        "Personal Growth": {
+          "title": "Foundation Building",
+          "content": "Your growth is built on solid ground, not shifting sand. Sunday's reflection on core values and long-term goals keeps you aligned. Principles over trends.",
+          "advice": "Review your core values and how last week's actions aligned.",
+          "luckyNumber": 30,
+          "powerColor": "Mahogany"
+        }
+      }
+    },
+    "ESFJ": {
+      "Monday": {
+        "Career": {
+          "title": "Team Harmony",
+          "content": "Monday's fresh start is your chance to set a positive tone. Your natural warmth helps colleagues transition from weekend mode. A kind word, a thoughtful check-in—these small gestures create the collaborative atmosphere you thrive in.",
+          "advice": "Greet each colleague with genuine interest in their weekend.",
+          "luckyNumber": 6,
+          "powerColor": "Rose Pink"
+        },
+        "Love": {
+          "title": "Nurturing Start",
+          "content": "Your caring nature shines on Monday mornings. A thoughtful gesture for your partner—a prepared breakfast, a loving note—sets the week's emotional tone. Your love language is service.",
+          "advice": "Do one small caring thing for your partner before they start their day.",
+          "luckyNumber": 2,
+          "powerColor": "Peach"
+        },
+        "Social": {
+          "title": "Community Connection",
+          "content": "Your social calendar fills effortlessly. Monday planning includes connecting with those you care about. Who needs encouragement? Who deserves celebration? Your attention strengthens community bonds.",
+          "advice": "Reach out to someone who's been on your mind.",
+          "luckyNumber": 9,
+          "powerColor": "Sky Blue"
+        },
+        "Health": {
+          "title": "Routine Care",
+          "content": "Your wellbeing depends on predictable patterns. Monday establishes the week's healthy rhythm—regular meals, consistent sleep, planned movement. Structure supports your nurturing of others.",
+          "advice": "Set your sleep schedule for the entire week right now.",
+          "luckyNumber": 4,
+          "powerColor": "Lavender"
+        },
+        "Personal Growth": {
+          "title": "Relationship Investment",
+          "content": "Your growth happens through connection. This week, deepen one important relationship. Your capacity for meaningful bonds is a gift—develop it intentionally.",
+          "advice": "Plan quality time with someone important to you this week.",
+          "luckyNumber": 11,
+          "powerColor": "Coral"
+        }
+      },
+      "Tuesday": {
+        "Career": {
+          "title": "Collaborative Spirit",
+          "content": "Team projects energize you. Tuesday's group work lets you shine as the connector and harmonizer. Your ability to read the room and respond to emotional needs keeps projects moving smoothly.",
+          "advice": "Offer to help a colleague who seems overwhelmed today.",
+          "luckyNumber": 8,
+          "powerColor": "Salmon"
+        },
+        "Love": {
+          "title": "Emotional Attunement",
+          "content": "Your partner's unspoken needs register immediately. Tuesday's emotional check-in—really listening, validating feelings—deepens intimacy. Your sensitivity is your superpower.",
+          "advice": "Ask your partner how they're really feeling, and listen fully.",
+          "luckyNumber": 3,
+          "powerColor": "Blush"
+        },
+        "Social": {
+          "title": "Gathering Momentum",
+          "content": "Social connections multiply your joy. Tuesday's conversations plant seeds for weekend gatherings. Your hosting instincts are already envisioning the details.",
+          "advice": "Start planning one social gathering for later this week or weekend.",
+          "luckyNumber": 14,
+          "powerColor": "Baby Blue"
+        },
+        "Health": {
+          "title": "Nurturing Self",
+          "content": "You pour energy into others—don't forget yourself. Tuesday's self-care isn't selfish; it's sustainable. A quiet moment, a nutritious meal, gentle movement. You can't give from an empty well.",
+          "advice": "Schedule one thing just for yourself today, and protect that time.",
+          "luckyNumber": 7,
+          "powerColor": "Soft Pink"
+        },
+        "Personal Growth": {
+          "title": "Empathy Expansion",
+          "content": "Your natural compassion can grow even deeper. Practice seeing perspectives vastly different from your own. Empathy isn't agreement—it's understanding.",
+          "advice": "Have a conversation with someone whose views differ from yours, seeking only to understand.",
+          "luckyNumber": 16,
+          "powerColor": "Dusty Rose"
+        }
+      },
+      "Wednesday": {
+        "Career": {
+          "title": "Recognition of Others",
+          "content": "Your colleagues' contributions often go unnoticed. Wednesday's acknowledgment—specific praise, public appreciation—boosts morale and builds loyalty. Everyone needs to feel seen.",
+          "advice": "Give specific, genuine praise to three colleagues today.",
+          "luckyNumber": 5,
+          "powerColor": "Warm Pink"
+        },
+        "Love": {
+          "title": "Appreciation Expression",
+          "content": "Your partner's daily contributions deserve recognition. Wednesday's explicit appreciation—naming what you value, thanking them specifically—fills their emotional tank.",
+          "advice": "Tell your partner three specific things you appreciate about them.",
+          "luckyNumber": 12,
+          "powerColor": "Petal Pink"
+        },
+        "Social": {
+          "title": "Bridge Building",
+          "content": "Your gift for connecting people serves everyone. Two friends who should meet? Introduce them. Facilitating connections creates ripples of goodwill.",
+          "advice": "Introduce two people in your life who would benefit from knowing each other.",
+          "luckyNumber": 18,
+          "powerColor": "Powder Blue"
+        },
+        "Health": {
+          "title": "Social Wellness",
+          "content": "Your health includes social nourishment. Isolation depletes you; connection restores you. Wednesday's social interaction isn't distraction—it's maintenance.",
+          "advice": "Have a meaningful conversation with a friend today.",
+          "luckyNumber": 1,
+          "powerColor": "Pale Lavender"
+        },
+        "Personal Growth": {
+          "title": "Boundary Practice",
+          "content": "Your desire to please sometimes overrides your own needs. Practice gentle but firm boundaries. Saying no to others sometimes means saying yes to yourself.",
+          "advice": "Decline one request today that doesn't align with your priorities.",
+          "luckyNumber": 20,
+          "powerColor": "Mauve"
+        }
+      },
+      "Thursday": {
+        "Career": {
+          "title": "Harmonious Resolution",
+          "content": "Workplace tensions surface today. Your diplomatic skills are needed—mediating conflicts, soothing ruffled feathers, finding common ground. Harmony isn't the absence of conflict; it's the resolution.",
+          "advice": "If you sense tension, offer to help find a solution.",
+          "luckyNumber": 4,
+          "powerColor": "Flamingo Pink"
+        },
+        "Love": {
+          "title": "Emotional Safety",
+          "content": "Your partner needs to feel completely accepted. Thursday's unconditional support—no judgment, no fixing, just presence—creates emotional sanctuary. Safety precedes vulnerability.",
+          "advice": "Create space for your partner to share without you trying to solve anything.",
+          "luckyNumber": 10,
+          "powerColor": "Blossom"
+        },
+        "Social": {
+          "title": "Meaningful Gathering",
+          "content": "Quality time with loved ones restores your soul. Thursday's dinner, coffee, or call—intentional connection over casual networking. Depth over breadth.",
+          "advice": "Reach out to someone you haven't seen recently but miss.",
+          "luckyNumber": 15,
+          "powerColor": "Serenity Blue"
+        },
+        "Health": {
+          "title": "Emotional Awareness",
+          "content": "Your emotions affect your body directly. Thursday's check-in: what are you feeling, and where do you feel it? Naming emotions reduces their physical impact.",
+          "advice": "Do a body scan and name the emotion associated with any tension you find.",
+          "luckyNumber": 8,
+          "powerColor": "Ballerina Pink"
+        },
+        "Personal Growth": {
+          "title": "Authentic Expression",
+          "content": "Your desire for harmony sometimes suppresses your truth. Practice expressing your genuine thoughts and feelings, even when they might create momentary discomfort. Authenticity over approval.",
+          "advice": "Share one genuine opinion you've been holding back.",
+          "luckyNumber": 22,
+          "powerColor": "Orchid"
+        }
+      },
+      "Friday": {
+        "Career": {
+          "title": "Week Celebration",
+          "content": "The team's hard work deserves recognition. Friday's celebration—however small—boosts morale and builds culture. Your instinct to appreciate others creates loyalty.",
+          "advice": "Acknowledge your team's collective achievements from this week.",
+          "luckyNumber": 7,
+          "powerColor": "Hot Pink"
+        },
+        "Love": {
+          "title": "Weekend Anticipation",
+          "content": "Shared weekend plans build joint excitement. Friday's collaborative planning—what adventures await? Anticipation is half the pleasure.",
+          "advice": "Plan something fun for the weekend together.",
+          "luckyNumber": 13,
+          "powerColor": "Fuchsia"
+        },
+        "Social": {
+          "title": "Festive Energy",
+          "content": "Friday's social possibilities energize you. Dinner with friends, a gathering, a celebration—your hosting instincts activate. Social connection is your Friday fuel.",
+          "advice": "Make spontaneous plans with friends for tonight.",
+          "luckyNumber": 19,
+          "powerColor": "Aqua"
+        },
+        "Health": {
+          "title": "Joyful Movement",
+          "content": "Exercise as obligation drains you. Friday's movement should feel like play—dancing, walking with friends, a sport you love. Joy sustains habits.",
+          "advice": "Do physical activity that feels social and fun, not like a workout.",
+          "luckyNumber": 2,
+          "powerColor": "Cherry Blossom"
+        },
+        "Personal Growth": {
+          "title": "Gratitude Practice",
+          "content": "Your natural appreciation can be deepened through practice. Friday's reflection on week's blessings—specific, heartfelt—shifts perspective and builds resilience.",
+          "advice": "Write down five specific things you're grateful for from this week.",
+          "luckyNumber": 25,
+          "powerColor": "Tulip"
+        }
+      },
+      "Saturday": {
+        "Career": {
+          "title": "Service Satisfaction",
+          "content": "Work that helps others fulfills you deeply. Saturday volunteer work, helping a friend with their business, mentoring—service doesn't pause for weekends. Contribution is your calling.",
+          "advice": "Spend some time helping someone with something important to them.",
+          "luckyNumber": 9,
+          "powerColor": "Raspberry"
+        },
+        "Love": {
+          "title": "Quality Connection",
+          "content": "Unhurried Saturday hours with your partner nourish the relationship. Shared activities, deep conversations, simple presence—your undivided attention is love.",
+          "advice": "Plan a full day of activities you both enjoy, with no work distractions.",
+          "luckyNumber": 17,
+          "powerColor": "Watermelon"
+        },
+        "Social": {
+          "title": "Host with the Most",
+          "content": "Your hosting skills shine today. A gathering—formal or casual—lets you create experiences for others. The details you notice make guests feel special.",
+          "advice": "Host or organize something that brings people together.",
+          "luckyNumber": 21,
+          "powerColor": "Robin Egg Blue"
+        },
+        "Health": {
+          "title": "Social Activity",
+          "content": "Exercise with friends combines two needs. Saturday's group fitness, team sport, or walking club—social and physical wellness together. Multiplication over addition.",
+          "advice": "Do physical activity with at least one other person today.",
+          "luckyNumber": 6,
+          "powerColor": "Tea Rose"
+        },
+        "Personal Growth": {
+          "title": "Relationship Wisdom",
+          "content": "Your people skills can always improve. Saturday's observation—what makes interactions successful? What creates connection? Your natural talents deserve cultivation.",
+          "advice": "Read one article or chapter about communication or relationships.",
+          "luckyNumber": 24,
+          "powerColor": "Lilac"
+        }
+      },
+      "Sunday": {
+        "Career": {
+          "title": "Gentle Preparation",
+          "content": "Sunday evening's quiet planning prevents Monday's stress. Your methodical preparation—outfits, meals, schedules—creates smooth transitions. Self-care through organization.",
+          "advice": "Prepare for Monday in a way that feels caring, not stressful.",
+          "luckyNumber": 3,
+          "powerColor": "Strawberry"
+        },
+        "Love": {
+          "title": "Week Reflection",
+          "content": "Sunday invites looking back on shared experiences. Your appreciation for your partner—expressed specifically—renews commitment. Gratitude strengthens love.",
+          "advice": "Share your favorite moment with your partner from this past week.",
+          "luckyNumber": 11,
+          "powerColor": "Bubblegum"
+        },
+        "Social": {
+          "title": "Restorative Connection",
+          "content": "Even social beings need recharging. Sunday's quieter social interactions—one dear friend, family meal—restore without overwhelming. Quality over quantity.",
+          "advice": "Have a low-key, intimate gathering or one-on-one time with someone close.",
+          "luckyNumber": 16,
+          "powerColor": "Periwinkle"
+        },
+        "Health": {
+          "title": "Week Reset",
+          "content": "Sunday's rituals prepare you for the week ahead. Meal prep, gentle movement, early bedtime—your wellbeing infrastructure. Caring for yourself enables caring for others.",
+          "advice": "Create a Sunday evening self-care ritual that sets you up for a good week.",
+          "luckyNumber": 5,
+          "powerColor": "Plum Pink"
+        },
+        "Personal Growth": {
+          "title": "Values Alignment",
+          "content": "Your actions reflect your values—or they don't. Sunday's honest assessment: did this week align with who you want to be? Integrity is consistency between values and behavior.",
+          "advice": "Write about one way you lived your values this week, and one way you didn't.",
+          "luckyNumber": 28,
+          "powerColor": "Amethyst"
+        }
+      }
+    }
+  }
+}

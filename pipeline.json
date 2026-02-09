@@ -1,0 +1,197 @@
+{
+  "id": "horoscope-app",
+  "projectId": "horoscope-app",
+  "name": "Horoscope/MBTI App",
+  "description": "Daily horoscope and MBTI personality insights app with freemium model",
+  "repo": "local",
+  "projectPath": "/Users/devl/clawd/projects/horoscope-app",
+  "status": "active",
+  "currentStage": "deploy",
+  "stageOrder": [
+    "idea",
+    "prd",
+    "prd_review",
+    "tech_spec",
+    "spec_review",
+    "implementation",
+    "qa",
+    "deploy",
+    "iterate"
+  ],
+  "stages": {
+    "idea": {
+      "status": "completed",
+      "artifact": "idea.md",
+      "completedAt": "2026-02-07T03:45:00Z"
+    },
+    "prd": {
+      "status": "completed",
+      "artifact": "prd.md",
+      "completedAt": "2026-02-07T04:50:00Z"
+    },
+    "prd_review": {
+      "status": "completed",
+      "gate": "yuki-review-complete",
+      "reviewer": "yuki",
+      "verdict": "GO_WITH_CHANGES",
+      "completedAt": "2026-02-07T05:10:00Z"
+    },
+    "tech_spec": {
+      "status": "completed",
+      "artifact": "tech-spec.md",
+      "completedAt": "2026-02-07T06:03:54.080Z"
+    },
+    "spec_review": {
+      "status": "completed",
+      "artifact": "decisions/spec-review.md",
+      "reviewer": "yuki",
+      "verdict": "APPROVE_WITH_NOTES",
+      "completedAt": "2026-02-07T06:15:02.333Z",
+      "riskLevel": "MEDIUM",
+      "criticalIssues": 2,
+      "keyConcerns": [
+        "OpenAI cost scaling - implement caching + rate limiting",
+        "OpenAI rate limits at launch - pre-generate popular combinations",
+        "Fortune score randomness - make deterministic by user/date",
+        "SwiftData sync race condition - add retry logic"
+      ]
+    },
+    "implementation": {
+      "status": "completed",
+      "artifact": "aura/",
+      "startedAt": "2026-02-07T06:15:02Z",
+      "components": [
+        "Models/SwiftData entities",
+        "Views/UI components",
+        "Services/Auth, OpenAI, Subscription",
+        "Repositories/Data layer"
+      ],
+      "worktrees": [
+        "aura-core-v2",
+        "aura-ui-v2",
+        "aura-backend-v2",
+        "aura-subscription-v2"
+      ],
+      "tasks": [
+        {
+          "id": "aura-core-v2",
+          "status": "merged",
+          "assignee": "claude",
+          "worktree": "/tmp/aura-core-v2",
+          "branch": "feat/aura-core-v2",
+          "startedAt": "2026-02-07T07:15:00Z",
+          "completedAt": "2026-02-07T07:45:00Z",
+          "mergedAt": "2026-02-07T08:15:00Z",
+          "result": "SwiftData models, enums, AppState, AuraApp foundation - Build verified"
+        },
+        {
+          "id": "aura-ui-v2",
+          "status": "merged",
+          "assignee": "claude",
+          "worktree": "/tmp/aura-ui-v2",
+          "branch": "feat/aura-ui-v2",
+          "startedAt": "2026-02-07T07:15:00Z",
+          "completedAt": "2026-02-07T07:45:00Z",
+          "mergedAt": "2026-02-07T08:15:00Z",
+          "result": "Design system, components, screens, paywall - Build verified"
+        },
+        {
+          "id": "aura-backend-v2",
+          "status": "merged",
+          "assignee": "claude",
+          "worktree": "/tmp/aura-backend-v2",
+          "branch": "feat/aura-backend-v2",
+          "startedAt": "2026-02-07T07:15:00Z",
+          "completedAt": "2026-02-07T07:45:00Z",
+          "mergedAt": "2026-02-07T08:15:00Z",
+          "result": "Supabase, Auth, Sync, OpenAI service, edge function - Build verified"
+        },
+        {
+          "id": "aura-subscription-v2",
+          "status": "merged",
+          "assignee": "claude",
+          "worktree": "/tmp/aura-subscription-v2",
+          "branch": "feat/aura-subscription-v2",
+          "startedAt": "2026-02-07T07:15:00Z",
+          "completedAt": "2026-02-07T07:45:00Z",
+          "mergedAt": "2026-02-07T08:15:00Z",
+          "result": "RevenueCat integration, SubscriptionManager, Paywall - Build verified"
+        }
+      ],
+      "completedAt": "2026-02-07T08:15:45.837Z"
+    },
+    "qa": {
+      "status": "completed",
+      "startedAt": "2026-02-07T08:15:00Z",
+      "completedAt": "2026-02-07T09:45:02.170Z",
+      "reviewer": "yuki",
+      "resultArtifact": "qa-results.json",
+      "overallStatus": "NEEDS_FIXES",
+      "fixesInProgress": {
+        "taskId": "fix-qa-critical",
+        "assignee": "claude",
+        "worktree": "/tmp/fix-qa-critical",
+        "branch": "fix/qa-critical",
+        "startedAt": "2026-02-07T08:45:00Z",
+        "issues": [
+          "CRIT-001",
+          "CRIT-002",
+          "CRIT-003"
+        ]
+      },
+      "testsRun": 12,
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "criticalIssues": [],
+      "findings": {
+        "buildStatus": "PASS - iOS 17/macOS 14 compatibility fixed",
+        "moduleStatus": "PASS - All 4 modules compile correctly",
+        "specCompliance": "PASS - Critical spec items addressed",
+        "codeQuality": "PASS - Clean architecture, proper patterns"
+      },
+      "deploymentReady": true,
+      "estimatedFixTime": "0 hours",
+      "fixSummary": [
+        "CRIT-001: Added OpenAI rate limiting + caching",
+        "CRIT-002: Deterministic fortune scores (user+date seed)",
+        "CRIT-003: Platform targeting fixed (@available, Package.swift)"
+      ]
+    },
+    "deploy": {
+      "status": "blocked",
+      "xcodeProject": "aura/Aura.xcodeproj",
+      "bundleId": "com.xadev.aura",
+      "appName": "Aura",
+      "target": "Aura",
+      "iOSVersion": "17.0+",
+      "blockers": [
+        "Apple Distribution certificate revoked (CSSMERR_TP_CERT_REVOKED)",
+        "No provisioning profiles on build machine"
+      ],
+      "blockerOwner": "xavier",
+      "blockerNotes": "Manual fix required - Yuki recommends interactive Portal setup over CLI automation for one-off unblock",
+      "nextSteps": [
+        "[MANUAL] Apple Developer Portal → Certificates → Create new Apple Distribution cert",
+        "[MANUAL] Portal → Profiles → Create provisioning profile for com.xadev.aura",
+        "[MANUAL] Xcode → Preferences → Accounts → Download/Manage Certificates",
+        "[MANUAL] Target Aura → Signing & Capabilities → Team set, 'Automatically manage signing' enabled",
+        "[AUTOMATED] Yuki proceeds with Archive + TestFlight upload once signing resolved"
+      ],
+      "yukiRecommendation": "Manual Portal setup preferred over CLI (fastlane/match) for one-off cert revocation. Requires account ownership/2FA. CLI risks mismatched profiles."
+    },
+    "iterate": {
+      "status": "pending"
+    }
+  },
+  "metadata": {
+    "createdAt": "2026-02-07T03:45:00Z",
+    "priority": "P1",
+    "complexity": "medium",
+    "source": "ROADMAP.md",
+    "sprintTarget": "60-Day Sprint - Horoscope/MBTI app live by Apr 6",
+    "deadline": "2026-04-06",
+    "revenueTarget": "$5K/month"
+  },
+  "updatedAt": "2026-02-07T12:36:00.000Z"
+}

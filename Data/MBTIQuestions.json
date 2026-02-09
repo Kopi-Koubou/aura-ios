@@ -1,0 +1,561 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "totalQuestions": 50,
+    "dimensions": ["EI", "SN", "TF", "JP"],
+    "scoringMethod": "weighted_count",
+    "lastUpdated": "2026-02-04"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "dimension": "EI",
+      "text": "At a party, you tend to...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Start conversations with new people", "score": 2 },
+        { "value": "I", "text": "Stick with people you already know", "score": 2 },
+        { "value": "N", "text": "Observe from a quiet corner", "score": 1 }
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "SN",
+      "text": "When learning something new, you prefer...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Concrete examples and hands-on practice", "score": 2 },
+        { "value": "N", "text": "Understanding concepts and theories first", "score": 2 },
+        { "value": "B", "text": "A mix of both approaches", "score": 1 }
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "TF",
+      "text": "When making a difficult decision, you rely more on...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Logic and objective analysis", "score": 2 },
+        { "value": "F", "text": "Personal values and how it affects others", "score": 2 },
+        { "value": "N", "text": "Whatever feels right in the moment", "score": 1 }
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "JP",
+      "text": "Your ideal weekend plan looks like...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "Scheduled activities with clear timelines", "score": 2 },
+        { "value": "P", "text": "Going with the flow, deciding spontaneously", "score": 2 },
+        { "value": "M", "text": "One planned activity, rest is flexible", "score": 1 }
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "EI",
+      "text": "After a long day, you recharge by...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Calling friends or going out", "score": 2 },
+        { "value": "I", "text": "Spending time alone with a book or show", "score": 2 },
+        { "value": "B", "text": "A quick chat, then some me-time", "score": 1 }
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "SN",
+      "text": "You notice details like...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "What's actually happening right now", "score": 2 },
+        { "value": "N", "text": "Patterns and what things might mean", "score": 2 },
+        { "value": "B", "text": "Both, depending on the situation", "score": 1 }
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "TF",
+      "text": "A friend shares a problem. You...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Offer solutions and practical advice", "score": 2 },
+        { "value": "F", "text": "Listen and offer emotional support", "score": 2 },
+        { "value": "B", "text": "Ask what they need right now", "score": 1 }
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "JP",
+      "text": "Deadlines make you feel...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "Motivated - you plan to finish early", "score": 2 },
+        { "value": "P", "text": "Pressured - you work best last-minute", "score": 2 },
+        { "value": "M", "text": "Neutral - you adapt as needed", "score": 1 }
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "EI",
+      "text": "In group discussions, you...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Think out loud and share ideas openly", "score": 2 },
+        { "value": "I", "text": "Process internally before speaking", "score": 2 },
+        { "value": "B", "text": "Share when you have something valuable", "score": 1 }
+      ]
+    },
+    {
+      "id": 10,
+      "dimension": "SN",
+      "text": "You trust your...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Experience and proven facts", "score": 2 },
+        { "value": "N", "text": "Intuition and gut feelings", "score": 2 },
+        { "value": "B", "text": "A combination depending on context", "score": 1 }
+      ]
+    },
+    {
+      "id": 11,
+      "dimension": "TF",
+      "text": "Being right is...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Important - accuracy matters", "score": 2 },
+        { "value": "F", "text": "Secondary to maintaining harmony", "score": 2 },
+        { "value": "N", "text": "Depends on the situation", "score": 1 }
+      ]
+    },
+    {
+      "id": 12,
+      "dimension": "JP",
+      "text": "Your workspace is typically...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "Organized with everything in its place", "score": 2 },
+        { "value": "P", "text": "Creative chaos - you know where things are", "score": 2 },
+        { "value": "M", "text": "Organized clutter", "score": 1 }
+      ]
+    },
+    {
+      "id": 13,
+      "dimension": "EI",
+      "text": "Meeting new people makes you...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Energized and curious", "score": 2 },
+        { "value": "I", "text": "A bit drained but you can do it", "score": 2 },
+        { "value": "A", "text": "Anxious and avoid if possible", "score": 1 }
+      ]
+    },
+    {
+      "id": 14,
+      "dimension": "SN",
+      "text": "When reading fiction, you prefer...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Stories grounded in reality", "score": 2 },
+        { "value": "N", "text": "Fantasy and abstract concepts", "score": 2 },
+        { "value": "B", "text": "Any good story regardless of genre", "score": 1 }
+      ]
+    },
+    {
+      "id": 15,
+      "dimension": "TF",
+      "text": "Criticism should be...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Direct and constructive", "score": 2 },
+        { "value": "F", "text": "Delivered with sensitivity", "score": 2 },
+        { "value": "N", "text": "Avoided if possible", "score": 1 }
+      ]
+    },
+    {
+      "id": 16,
+      "dimension": "JP",
+      "text": "You handle surprises by...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "Adapting but preferring structure", "score": 2 },
+        { "value": "P", "text": "Thriving in the spontaneity", "score": 2 },
+        { "value": "M", "text": "Rolling with it uncomfortably", "score": 1 }
+      ]
+    },
+    {
+      "id": 17,
+      "dimension": "EI",
+      "text": "Your ideal vacation involves...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Meeting locals and group activities", "score": 2 },
+        { "value": "I", "text": "Quiet exploration and reflection", "score": 2 },
+        { "value": "B", "text": "A mix of both experiences", "score": 1 }
+      ]
+    },
+    {
+      "id": 18,
+      "dimension": "SN",
+      "text": "You solve problems by...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Using proven methods that worked before", "score": 2 },
+        { "value": "N", "text": "Trying innovative new approaches", "score": 2 },
+        { "value": "B", "text": "Adapting old methods creatively", "score": 1 }
+      ]
+    },
+    {
+      "id": 19,
+      "dimension": "TF",
+      "text": "In conflicts, you prioritize...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Finding the objective truth", "score": 2 },
+        { "value": "F", "text": "Preserving relationships", "score": 2 },
+        { "value": "B", "text": "Balancing both perspectives", "score": 1 }
+      ]
+    },
+    {
+      "id": 20,
+      "dimension": "JP",
+      "text": "When starting a project, you...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "Create a detailed plan first", "score": 2 },
+        { "value": "P", "text": "Dive in and figure it out as you go", "score": 2 },
+        { "value": "M", "text": "Outline main steps, improvise details", "score": 1 }
+      ]
+    },
+    {
+      "id": 21,
+      "dimension": "EI",
+      "text": "Small talk is...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Natural and enjoyable", "score": 2 },
+        { "value": "I", "text": "Awkward and draining", "score": 2 },
+        { "value": "M", "text": "Tolerable in small doses", "score": 1 }
+      ]
+    },
+    {
+      "id": 22,
+      "dimension": "SN",
+      "text": "You remember people by...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Their face and what they were wearing", "score": 2 },
+        { "value": "N", "text": "The impression they made on you", "score": 2 },
+        { "value": "B", "text": "Both appearance and vibe", "score": 1 }
+      ]
+    },
+    {
+      "id": 23,
+      "dimension": "TF",
+      "text": "Compliments mean more when they're...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Specific about your accomplishments", "score": 2 },
+        { "value": "F", "text": "Genuine expressions of appreciation", "score": 2 },
+        { "value": "B", "text": "Both specific and heartfelt", "score": 1 }
+      ]
+    },
+    {
+      "id": 24,
+      "dimension": "JP",
+      "text": "You finish tasks...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "Before the deadline with time to spare", "score": 2 },
+        { "value": "P", "text": "Right at the deadline or slightly after", "score": 2 },
+        { "value": "M", "text": "Depends on the task's importance", "score": 1 }
+      ]
+    },
+    {
+      "id": 25,
+      "dimension": "EI",
+      "text": "You're described by friends as...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Outgoing and talkative", "score": 2 },
+        { "value": "I", "text": "Thoughtful and reserved", "score": 2 },
+        { "value": "B", "text": "Adaptable depending on the group", "score": 1 }
+      ]
+    },
+    {
+      "id": 26,
+      "dimension": "SN",
+      "text": "You'd rather work with...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Clear, established facts", "score": 2 },
+        { "value": "N", "text": "Abstract concepts and possibilities", "score": 2 },
+        { "value": "B", "text": "Both, switching as needed", "score": 1 }
+      ]
+    },
+    {
+      "id": 27,
+      "dimension": "TF",
+      "text": "Success means...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Achieving measurable goals", "score": 2 },
+        { "value": "F", "text": "Making a positive impact on others", "score": 2 },
+        { "value": "B", "text": "A balance of both", "score": 1 }
+      ]
+    },
+    {
+      "id": 28,
+      "dimension": "JP",
+      "text": "Your daily routine is...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "Consistent and structured", "score": 2 },
+        { "value": "P", "text": "Flexible and varied", "score": 2 },
+        { "value": "M", "text": "Structured but with wiggle room", "score": 1 }
+      ]
+    },
+    {
+      "id": 29,
+      "dimension": "EI",
+      "text": "Phone calls make you...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Happy to chat anytime", "score": 2 },
+        { "value": "I", "text": "Prefer texts unless necessary", "score": 2 },
+        { "value": "M", "text": "Okay with scheduled calls", "score": 1 }
+      ]
+    },
+    {
+      "id": 30,
+      "dimension": "SN",
+      "text": "Future planning feels...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Best when based on current trends", "score": 2 },
+        { "value": "N", "text": "Exciting to imagine possibilities", "score": 2 },
+        { "value": "B", "text": "Important but should stay flexible", "score": 1 }
+      ]
+    },
+    {
+      "id": 31,
+      "dimension": "TF",
+      "text": "Rules should be...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Applied consistently to everyone", "score": 2 },
+        { "value": "F", "text": "Flexible based on circumstances", "score": 2 },
+        { "value": "B", "text": "Followed but with common sense", "score": 1 }
+      ]
+    },
+    {
+      "id": 32,
+      "dimension": "JP",
+      "text": "Lists and schedules make you feel...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "In control and organized", "score": 2 },
+        { "value": "P", "text": "Restricted and stressed", "score": 2 },
+        { "value": "M", "text": "Helpful but not essential", "score": 1 }
+      ]
+    },
+    {
+      "id": 33,
+      "dimension": "EI",
+      "text": "Being alone for a weekend feels...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Lonely and boring", "score": 2 },
+        { "value": "I", "text": "Peaceful and restorative", "score": 2 },
+        { "value": "B", "text": "Nice occasionally", "score": 1 }
+      ]
+    },
+    {
+      "id": 34,
+      "dimension": "SN",
+      "text": "You describe events by focusing on...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Exactly what happened, step by step", "score": 2 },
+        { "value": "N", "text": "The overall meaning and significance", "score": 2 },
+        { "value": "B", "text": "Both details and big picture", "score": 1 }
+      ]
+    },
+    {
+      "id": 35,
+      "dimension": "TF",
+      "text": "Movie endings should be...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Logical and well-explained", "score": 2 },
+        { "value": "F", "text": "Emotionally satisfying", "score": 2 },
+        { "value": "B", "text": "Both logical and moving", "score": 1 }
+      ]
+    },
+    {
+      "id": 36,
+      "dimension": "JP",
+      "text": "You pack for trips by...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "Making a list days in advance", "score": 2 },
+        { "value": "P", "text": "Throwing things in last minute", "score": 2 },
+        { "value": "M", "text": "Packing the night before with a mental list", "score": 1 }
+      ]
+    },
+    {
+      "id": 37,
+      "dimension": "EI",
+      "text": "Public speaking is...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Exciting and energizing", "score": 2 },
+        { "value": "I", "text": "Nerve-wracking but manageable", "score": 2 },
+        { "value": "A", "text": "Terrifying and avoided", "score": 1 }
+      ]
+    },
+    {
+      "id": 38,
+      "dimension": "SN",
+      "text": "You enjoy hobbies that involve...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Tangible results you can see/touch", "score": 2 },
+        { "value": "N", "text": "Exploring ideas and concepts", "score": 2 },
+        { "value": "B", "text": "Both physical and mental activities", "score": 1 }
+      ]
+    },
+    {
+      "id": 39,
+      "dimension": "TF",
+      "text": "When someone is upset, you first...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Try to fix the problem causing it", "score": 2 },
+        { "value": "F", "text": "Acknowledge and validate their feelings", "score": 2 },
+        { "value": "B", "text": "Ask if they want solutions or support", "score": 1 }
+      ]
+    },
+    {
+      "id": 40,
+      "dimension": "JP",
+      "text": "Changing plans at the last minute is...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "Stressful and disruptive", "score": 2 },
+        { "value": "P", "text": "No problem, you adapt easily", "score": 2 },
+        { "value": "M", "text": "Annoying but you deal with it", "score": 1 }
+      ]
+    },
+    {
+      "id": 41,
+      "dimension": "EI",
+      "text": "Your energy level after socializing is...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Higher than when you started", "score": 2 },
+        { "value": "I", "text": "Lower, you need recovery time", "score": 2 },
+        { "value": "M", "text": "About the same", "score": 1 }
+      ]
+    },
+    {
+      "id": 42,
+      "dimension": "SN",
+      "text": "Learning history, you prefer...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Specific dates, names, and events", "score": 2 },
+        { "value": "N", "text": "Themes, patterns, and lessons", "score": 2 },
+        { "value": "B", "text": "Both - context and specifics", "score": 1 }
+      ]
+    },
+    {
+      "id": 43,
+      "dimension": "TF",
+      "text": "Fairness means...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Treating everyone by the same rules", "score": 2 },
+        { "value": "F", "text": "Considering each person's situation", "score": 2 },
+        { "value": "B", "text": "A balance of equality and equity", "score": 1 }
+      ]
+    },
+    {
+      "id": 44,
+      "dimension": "JP",
+      "text": "Having multiple projects going is...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "Overwhelming - you prefer one at a time", "score": 2 },
+        { "value": "P", "text": "Stimulating - you like variety", "score": 2 },
+        { "value": "M", "text": "Okay if they're at different stages", "score": 1 }
+      ]
+    },
+    {
+      "id": 45,
+      "dimension": "EI",
+      "text": "Introduce yourself to strangers at an event...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Without hesitation", "score": 2 },
+        { "value": "I", "text": "Only if necessary", "score": 2 },
+        { "value": "M", "text": "After someone else breaks the ice", "score": 1 }
+      ]
+    },
+    {
+      "id": 46,
+      "dimension": "SN",
+      "text": " metaphors and analogies are...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Sometimes confusing, prefer directness", "score": 2 },
+        { "value": "N", "text": "Helpful for understanding complex ideas", "score": 2 },
+        { "value": "B", "text": "Useful when they clarify", "score": 1 }
+      ]
+    },
+    {
+      "id": 47,
+      "dimension": "TF",
+      "text": "Telling white lies to spare feelings is...",
+      "weight": 1.0,
+      "options": [
+        { "value": "T", "text": "Dishonest and harmful long-term", "score": 2 },
+        { "value": "F", "text": "Sometimes kind and necessary", "score": 2 },
+        { "value": "B", "text": "Situational - depends on the stakes", "score": 1 }
+      ]
+    },
+    {
+      "id": 48,
+      "dimension": "JP",
+      "text": "Deciding where to eat with friends...",
+      "weight": 1.0,
+      "options": [
+        { "value": "J", "text": "You suggest specific options quickly", "score": 2 },
+        { "value": "P", "text": "You're open to whatever others want", "score": 2 },
+        { "value": "M", "text": "You narrow down then decide together", "score": 1 }
+      ]
+    },
+    {
+      "id": 49,
+      "dimension": "EI",
+      "text": "Processing your thoughts works best...",
+      "weight": 1.0,
+      "options": [
+        { "value": "E", "text": "Through conversation with others", "score": 2 },
+        { "value": "I", "text": "In quiet reflection by yourself", "score": 2 },
+        { "value": "B", "text": "Both - talking then reflecting", "score": 1 }
+      ]
+    },
+    {
+      "id": 50,
+      "dimension": "SN",
+      "text": "You value experiences that are...",
+      "weight": 1.0,
+      "options": [
+        { "value": "S", "text": "Rich in sensory details", "score": 2 },
+        { "value": "N", "text": "Meaningful and thought-provoking", "score": 2 },
+        { "value": "B", "text": "Both engaging and significant", "score": 1 }
+      ]
+    }
+  ]
+}
