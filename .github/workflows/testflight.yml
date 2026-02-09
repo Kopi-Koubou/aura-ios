@@ -25,6 +25,10 @@ jobs:
         with:
           xcode-version: '16.2'
       
+      - name: Install iOS Platform
+        run: |
+          sudo xcodebuild -downloadPlatform iOS
+      
       - name: Build Archive
         run: |
           xcodebuild -project aura/Aura.xcodeproj \
