@@ -1,0 +1,52 @@
+name: Deploy to TestFlight
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_notes:
+        description: 'Release notes'
+        required: false
+        default: ''
+  push:
+    branches: [main]
+    tags: ['v*']
+
+jobs:
+  build-and-deploy:
+    runs-on: macos-15
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.2'
+      
+      - name: Build Archive
+        run: |
+          xcodebuild -project aura/Aura.xcodeproj \
+            -scheme Aura \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/Aura.xcarchive \
+            archive
+      
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/Aura.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath build/
+      
+      - name: Upload to TestFlight
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        run: |
+          xcrun altool --upload-app \
+            --type ios \
+            --file build/Aura.ipa \
+            --username "$APPLE_ID" \
+            --password "$APPLE_APP_SPECIFIC_PASSWORD"
