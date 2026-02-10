@@ -14,7 +14,7 @@ on:
 jobs:
   build-and-deploy:
     runs-on: macos-15
-    timeout-minutes: 30
+    timeout-minutes: 45
     
     steps:
       - name: Checkout
@@ -29,13 +29,30 @@ jobs:
         run: |
           sudo xcodebuild -downloadPlatform iOS
       
+      - name: Install Apple Certificate
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+          p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      
+      - name: Install Provisioning Profile
+        uses: apple-actions/download-provisioning-profiles@v2
+        with:
+          bundle-id: com.xadev.aura
+          issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPLE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+      
       - name: Build Archive
         run: |
           xcodebuild -project aura/Aura.xcodeproj \
             -scheme Aura \
             -destination 'generic/platform=iOS' \
             -archivePath build/Aura.xcarchive \
-            archive
+            archive \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="iPhone Distribution" \
+            PROVISIONING_PROFILE_SPECIFIER="match AppStore com.xadev.aura"
       
       - name: Export IPA
         run: |
