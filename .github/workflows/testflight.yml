@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: macos-14
+    runs-on: macos-15
     timeout-minutes: 45
     
     steps:
@@ -20,7 +20,7 @@ jobs:
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '15.4'
+          xcode-version: '16.2'
       
       - name: Debug - Check Secrets
         run: |
@@ -34,10 +34,13 @@ jobs:
       - name: Verify iOS SDK
         run: |
           echo "Available SDKs:"
-          xcodebuild -showsdks | grep -i iphoneos
+          xcodebuild -showsdks
           echo ""
-          echo "Available destinations:"
-          xcodebuild -project aura/Aura.xcodeproj -scheme Aura -showdestinations 2>/dev/null | head -20 || true
+          echo "Checking iOS platform..."
+          xcrun simctl list runtimes
+          echo ""
+          echo "Checking for iOS device support..."
+          ls -la /Applications/Xcode_16.2.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport/ 2>/dev/null || echo "DeviceSupport not found"
       
       - name: Install Provisioning Profile
         run: |
