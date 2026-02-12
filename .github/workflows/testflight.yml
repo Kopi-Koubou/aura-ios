@@ -22,14 +22,45 @@ jobs:
         with:
           xcode-version: '16.2'
       
+      - name: Debug - Check Secrets
+        run: |
+          echo "Checking secret availability..."
+          if [ -n "${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}" ]; then
+            echo "✅ BUILD_PROVISION_PROFILE_BASE64 is set"
+          else
+            echo "❌ BUILD_PROVISION_PROFILE_BASE64 is NOT set"
+          fi
+      
       - name: Install Provisioning Profile
         run: |
+          echo "Installing provisioning profile..."
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
           ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
+          echo "Profile installed. Checking UUID..."
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision 2>/dev/null | plutil -p - | grep UUID || echo "Could not read profile"
+      
+      - name: Debug - List Project Structure
+        run: |
+          echo "Project structure:"
+          ls -la
+          ls -la aura/ || echo "aura/ not found"
+          ls -la aura/Aura.xcodeproj/ || echo "aura/Aura.xcodeproj not found"
+      
+      - name: Build for Simulator (Test)
+        run: |
+          echo "Testing simulator build first..."
+          xcodebuild -project aura/Aura.xcodeproj \
+            -scheme Aura \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            build \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tail -50
       
       - name: Build and Archive
+        id: build
         run: |
+          echo "Building archive..."
           xcodebuild -project aura/Aura.xcodeproj \
             -scheme Aura \
             -destination 'generic/platform=iOS' \
@@ -37,7 +68,14 @@ jobs:
             archive \
             CODE_SIGN_STYLE=Automatic \
             DEVELOPMENT_TEAM=M42QAK8JZ9 \
-            CODE_SIGN_IDENTITY="iPhone Distribution"
+            2>&1 | tee build.log | tail -100
+          BUILD_STATUS=${PIPESTATUS[0]}
+          if [ $BUILD_STATUS -ne 0 ]; then
+            echo "Build failed with status $BUILD_STATUS"
+            echo "Full build log:"
+            cat build.log
+            exit $BUILD_STATUS
+          fi
       
       - name: Create Export Options
         run: |
@@ -65,23 +103,10 @@ jobs:
           xcodebuild -exportArchive \
             -archivePath build/Aura.xcarchive \
             -exportOptionsPlist ExportOptions.plist \
-            -exportPath build/
+            -exportPath build/ \
+            2>&1 | tail -50
       
-      - name: Upload to TestFlight
-        env:
-          APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
-          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
-          APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+      - name: List Build Output
         run: |
-          if [ -n "$APPLE_ISSUER_ID" ] && [ -n "$APPLE_API_KEY_ID" ] && [ -n "$APPLE_API_PRIVATE_KEY" ]; then
-            echo "$APPLE_API_PRIVATE_KEY" | base64 -d > /tmp/AuthKey.p8
-            xcrun altool --upload-app \
-              --type ios \
-              --file build/Aura.ipa \
-              --apiKey "$APPLE_API_KEY_ID" \
-              --apiIssuer "$APPLE_ISSUER_ID"
-          else
-            echo "App Store Connect API credentials not configured"
-            echo "IPA built at: build/Aura.ipa"
-            exit 1
-          fi
+          ls -la build/
+          file build/*.ipa || echo "No IPA found"
