@@ -31,11 +31,14 @@ jobs:
             echo "❌ BUILD_PROVISION_PROFILE_BASE64 is NOT set"
           fi
       
-      - name: Install iOS Platform (required)
+      - name: Install iOS Platform
         run: |
-          echo "Installing iOS platform..."
+          echo "Checking iOS platform availability..."
+          xcodebuild -showsdks | grep -i iphoneos || echo "iOS SDK not found, will try to download"
           sudo xcodebuild -runFirstLaunch || true
-          sudo xcodebuild -downloadPlatform iOS
+          echo "Attempting to download iOS platform (may already be installed)..."
+          sudo xcodebuild -downloadPlatform iOS || echo "Platform download skipped/failed, continuing..."
+          echo "Final SDK list:"
           xcodebuild -showsdks | grep -i iphoneos
       
       - name: Install Provisioning Profile
