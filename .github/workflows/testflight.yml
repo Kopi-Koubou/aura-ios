@@ -27,7 +27,7 @@ jobs:
       
       - name: Install iOS Platform
         run: |
-          sudo xcodebuild -downloadPlatform iOS
+          sudo xcodebuild -downloadPlatform iOS || true
       
       - name: Setup Signing
         env:
