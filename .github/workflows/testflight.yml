@@ -7,9 +7,6 @@ on:
         description: 'Release notes'
         required: false
         default: ''
-  push:
-    branches: [main]
-    tags: ['v*']
 
 jobs:
   build-and-deploy:
@@ -25,56 +22,22 @@ jobs:
         with:
           xcode-version: '16.2'
       
-      - name: Install iOS Platform
+      - name: Install Provisioning Profile
         run: |
-          sudo xcodebuild -downloadPlatform iOS || true
-      
-      - name: Setup Signing
-        env:
-          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: |
-          # Create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-          
-          # Import certificate from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-          
-          # Create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          
-          # Import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-          
-          # Apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
-          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i $PP_PATH 2>/dev/null))
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$PROFILE_UUID.mobileprovision
+          echo "${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
       
-      - name: Update Bundle ID
-        run: |
-          # Update bundle ID to match provisioning profile
-          sed -i '' 's/com\.xadev\.aura/com.kopikoubou.aura/g' aura/Aura.xcodeproj/project.pbxproj 2>/dev/null || true
-          sed -i '' 's/com\.xadev\.aura/com.kopikoubou.aura/g' aura/AuraApp/Info.plist 2>/dev/null || true
-      
-      - name: Build Archive
+      - name: Build and Archive
         run: |
           xcodebuild -project aura/Aura.xcodeproj \
             -scheme Aura \
             -destination 'generic/platform=iOS' \
             -archivePath build/Aura.xcarchive \
             archive \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="iPhone Distribution" \
-            PROVISIONING_PROFILE_SPECIFIER=""
+            CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM=M42QAK8JZ9 \
+            CODE_SIGN_IDENTITY="iPhone Distribution"
       
       - name: Create Export Options
         run: |
@@ -91,6 +54,8 @@ jobs:
               <true/>
               <key>uploadBitcode</key>
               <false/>
+              <key>signingStyle</key>
+              <string>automatic</string>
           </dict>
           </plist>
           EOF
@@ -108,12 +73,15 @@ jobs:
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
         run: |
-          # Create private key file
-          echo "$APPLE_API_PRIVATE_KEY" | base64 -d > /tmp/AuthKey.p8
-          
-          # Upload using API key
-          xcrun altool --upload-app \
-            --type ios \
-            --file build/Aura.ipa \
-            --apiKey "$APPLE_API_KEY_ID" \
-            --apiIssuer "$APPLE_ISSUER_ID"
+          if [ -n "$APPLE_ISSUER_ID" ] && [ -n "$APPLE_API_KEY_ID" ] && [ -n "$APPLE_API_PRIVATE_KEY" ]; then
+            echo "$APPLE_API_PRIVATE_KEY" | base64 -d > /tmp/AuthKey.p8
+            xcrun altool --upload-app \
+              --type ios \
+              --file build/Aura.ipa \
+              --apiKey "$APPLE_API_KEY_ID" \
+              --apiIssuer "$APPLE_ISSUER_ID"
+          else
+            echo "App Store Connect API credentials not configured"
+            echo "IPA built at: build/Aura.ipa"
+            exit 1
+          fi
