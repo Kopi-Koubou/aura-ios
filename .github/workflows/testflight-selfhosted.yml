@@ -1,0 +1,89 @@
+name: Deploy to TestFlight (Self-Hosted)
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_notes:
+        description: 'Release notes'
+        required: false
+        default: ''
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Xcode
+        run: |
+          echo "Using system Xcode:"
+          xcode-select -p
+          xcodebuild -version
+      
+      - name: Install Provisioning Profile
+        run: |
+          echo "Installing provisioning profile..."
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
+      
+      - name: Build and Archive
+        run: |
+          echo "Building archive..."
+          xcodebuild -project aura/Aura.xcodeproj \
+            -scheme Aura \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/Aura.xcarchive \
+            archive \
+            CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM=M42QAK8JZ9
+      
+      - name: Create Export Options
+        run: |
+          cat > ExportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>teamID</key>
+              <string>M42QAK8JZ9</string>
+              <key>uploadSymbols</key>
+              <true/>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>com.kopikoubou.aura</key>
+                  <string>match AppStore com.kopikoubou.aura</string>
+              </dict>
+          </dict>
+          </plist>
+          EOF
+      
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/Aura.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath build/
+      
+      - name: Upload to TestFlight
+        env:
+          APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+        run: |
+          echo "Uploading to TestFlight..."
+          xcrun altool --upload-app \
+            --type ios \
+            --file build/*.ipa \
+            --apiKey $APPLE_API_KEY_ID \
+            --apiIssuer $APPLE_ISSUER_ID \
+            --verbose
