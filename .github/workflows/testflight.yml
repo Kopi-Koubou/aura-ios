@@ -20,7 +20,7 @@ jobs:
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.1'
+          xcode-version: '16.2'
       
       - name: Debug - Check Secrets
         run: |
@@ -51,7 +51,7 @@ jobs:
           # Check DeviceSupport
           echo ""
           echo "DeviceSupport available:"
-          ls /Applications/Xcode_16.1.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport/ 2>/dev/null || echo "None found"
+          ls /Applications/Xcode_16.2.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport/ 2>/dev/null || echo "None found"
       
       - name: Install Provisioning Profile
         run: |
@@ -73,10 +73,10 @@ jobs:
         id: build
         run: |
           echo "Building archive..."
-          # Try to build with available simulator if device build fails
+          # Build using sdk flag instead of destination to bypass platform check
           xcodebuild -project aura/Aura.xcodeproj \
             -scheme Aura \
-            -destination 'generic/platform=iOS' \
+            -sdk iphoneos \
             -archivePath build/Aura.xcarchive \
             archive \
             CODE_SIGN_STYLE=Automatic \
