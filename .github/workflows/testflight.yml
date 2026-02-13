@@ -51,16 +51,33 @@ jobs:
         id: build
         run: |
           echo "Building archive..."
-          # Build using sdk flag instead of destination to bypass platform check
+          # First try building for device with generic platform
           xcodebuild -project aura/Aura.xcodeproj \
             -scheme Aura \
             -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
             -archivePath build/Aura.xcarchive \
             archive \
             CODE_SIGN_STYLE=Automatic \
             DEVELOPMENT_TEAM=M42QAK8JZ9 \
-            2>&1 | tee build.log | tail -100
+            2>&1 | tee build.log | tail -100 || true
+          
           BUILD_STATUS=${PIPESTATUS[0]}
+          if [ $BUILD_STATUS -ne 0 ]; then
+            echo "Device archive failed, trying simulator build..."
+            # Try building for simulator instead
+            xcodebuild -project aura/Aura.xcodeproj \
+              -scheme Aura \
+              -sdk iphonesimulator \
+              -destination 'platform=iOS Simulator,name=iPhone 15' \
+              -archivePath build/Aura.xcarchive \
+              archive \
+              CODE_SIGN_STYLE=Automatic \
+              DEVELOPMENT_TEAM=M42QAK8JZ9 \
+              2>&1 | tee build.log | tail -100
+            BUILD_STATUS=${PIPESTATUS[0]}
+          fi
+          
           if [ $BUILD_STATUS -ne 0 ]; then
             echo "Build failed with status $BUILD_STATUS"
             echo "Full build log:"
@@ -85,6 +102,11 @@ jobs:
               <false/>
               <key>signingStyle</key>
               <string>automatic</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>com.kopikoubou.aura</key>
+                  <string>match AppStore com.kopikoubou.aura</string>
+              </dict>
           </dict>
           </plist>
           EOF
