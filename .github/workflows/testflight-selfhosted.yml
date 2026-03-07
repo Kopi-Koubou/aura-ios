@@ -7,11 +7,93 @@ on:
         description: 'Release notes'
         required: false
         default: ''
+      generate_horoscope_auth_mode:
+        description: 'Auth mode baked into app Info.plist (legacy|audit|enforce)'
+        required: false
+        default: 'audit'
+        type: choice
+        options:
+          - legacy
+          - audit
+          - enforce
+      enforce_readiness_lookback_days:
+        description: 'Readiness lookback days when auth mode is enforce'
+        required: false
+        default: '3'
+        type: string
+      enforce_readiness_max_fallbacks:
+        description: 'Allowed fallback count when auth mode is enforce'
+        required: false
+        default: '0'
+        type: string
+      enforce_readiness_auth_context_filter:
+        description: 'Readiness context filter when auth mode is enforce'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - missing
+          - invalid
+      enforce_cache_readiness_lookback_days:
+        description: 'Cache-readiness lookback days when auth mode is enforce'
+        required: false
+        default: '2'
+        type: string
+      enforce_cache_readiness_max_degradations:
+        description: 'Allowed cache degradation count when auth mode is enforce'
+        required: false
+        default: '0'
+        type: string
+      enforce_cache_readiness_premium_filter:
+        description: 'Cache-readiness premium tier filter when auth mode is enforce'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - free
+          - premium
+      enforce_cache_readiness_reason_filter:
+        description: 'Cache-readiness degradation reason filter when auth mode is enforce'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - shared_content_cache_unavailable
+          - generated_shared_content_cache_persist_failed
+          - generated_shared_content_cache_temporarily_unavailable
+
+permissions:
+  contents: read
+
+concurrency:
+  group: testflight-release
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
     runs-on: self-hosted
     timeout-minutes: 30
+    env:
+      ARCHIVE_PATH: build/Aura.xcarchive
+      PRODUCT_BUNDLE_IDENTIFIER: com.kopikoubou.aura
+      KEYCHAIN_NAME: aura-build-${{ github.run_id }}.keychain-db
+      KEYCHAIN_PASSWORD: temporary_keychain_password
+      GENERATE_HOROSCOPE_AUTH_MODE: ${{ github.event.inputs.generate_horoscope_auth_mode || 'audit' }}
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SUPABASE_BASE_URL: ${{ secrets.SUPABASE_BASE_URL }}
+      APPLE_CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      ENFORCE_READINESS_LOOKBACK_DAYS: ${{ github.event.inputs.enforce_readiness_lookback_days || '3' }}
+      ENFORCE_READINESS_MAX_FALLBACKS: ${{ github.event.inputs.enforce_readiness_max_fallbacks || '0' }}
+      ENFORCE_READINESS_AUTH_CONTEXT_FILTER: ${{ github.event.inputs.enforce_readiness_auth_context_filter || 'all' }}
+      ENFORCE_CACHE_READINESS_LOOKBACK_DAYS: ${{ github.event.inputs.enforce_cache_readiness_lookback_days || '2' }}
+      ENFORCE_CACHE_READINESS_MAX_DEGRADATIONS: ${{ github.event.inputs.enforce_cache_readiness_max_degradations || '0' }}
+      ENFORCE_CACHE_READINESS_PREMIUM_FILTER: ${{ github.event.inputs.enforce_cache_readiness_premium_filter || 'all' }}
+      ENFORCE_CACHE_READINESS_REASON_FILTER: ${{ github.event.inputs.enforce_cache_readiness_reason_filter || 'all' }}
     
     steps:
       - name: Checkout
@@ -22,55 +104,308 @@ jobs:
           echo "Using system Xcode:"
           xcode-select -p
           xcodebuild -version
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Verify deploy artifact parity
+        run: bash ./scripts/check-deploy-parity.sh
+
+      - name: Run critical Swift regression tests
+        run: bash ./scripts/run-critical-swift-tests.sh
+
+      - name: Run edge-function regression tests
+        env:
+          REQUIRE_DENO: "true"
+        run: bash ./scripts/run-edge-function-tests.sh
+
+      - name: Validate signing and upload secrets
+        env:
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+          APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+          APPLE_CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          missing=0
+          for secret_name in BUILD_PROVISION_PROFILE_BASE64 APPLE_ISSUER_ID APPLE_API_KEY_ID APPLE_API_PRIVATE_KEY; do
+            if [ -z "${!secret_name:-}" ]; then
+              echo "::error::Missing required repository secret: ${secret_name}"
+              missing=1
+            fi
+          done
+
+          if [ "${missing}" -ne 0 ]; then
+            exit 1
+          fi
+
+          if [ -n "${APPLE_CERTIFICATE_BASE64:-}" ] && [ -z "${APPLE_CERTIFICATE_PASSWORD:-}" ]; then
+            echo "::error::APPLE_CERTIFICATE_PASSWORD must be set when APPLE_CERTIFICATE_BASE64 is provided."
+            exit 1
+          fi
+
+          if [ -n "${APPLE_CERTIFICATE_PASSWORD:-}" ] && [ -z "${APPLE_CERTIFICATE_BASE64:-}" ]; then
+            echo "::error::APPLE_CERTIFICATE_BASE64 must be set when APPLE_CERTIFICATE_PASSWORD is provided."
+            exit 1
+          fi
+
+          if [ -n "${APPLE_CERTIFICATE_BASE64:-}" ]; then
+            echo "APPLE_CERTIFICATE_BASE64 is set; workflow will install Apple Distribution certificate from secrets."
+          else
+            echo "APPLE_CERTIFICATE_BASE64 is unset; workflow expects a valid Apple Distribution identity on the self-hosted runner."
+          fi
+
+      - name: Install Apple Distribution Certificate (optional secret override)
+        if: ${{ env.APPLE_CERTIFICATE_BASE64 != '' }}
+        env:
+          APPLE_CERTIFICATE_BASE64: ${{ env.APPLE_CERTIFICATE_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ env.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          decode_base64() {
+            if base64 --decode </dev/null >/dev/null 2>&1; then
+              base64 --decode
+            else
+              base64 -D
+            fi
+          }
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_NAME"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+
+          cert_tmp="$(mktemp /tmp/certificate.XXXXXX.p12)"
+          trap 'rm -f "${cert_tmp}"' EXIT
+          printf '%s' "${APPLE_CERTIFICATE_BASE64}" | decode_base64 > "${cert_tmp}"
+
+          security import "${cert_tmp}" \
+            -k "$KEYCHAIN_NAME" \
+            -P "${APPLE_CERTIFICATE_PASSWORD}" \
+            -T /usr/bin/codesign \
+            -T /usr/bin/security
+
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+          security list-keychains -d user -s "$KEYCHAIN_NAME" $(security list-keychains -d user | tr -d '"')
+
+          echo "KEYCHAIN_INSTALLED_FROM_SECRET=true" >> "${GITHUB_ENV}"
+          echo "Imported Apple Distribution certificate into temporary keychain ${KEYCHAIN_NAME}."
+
+      - name: Verify Apple Distribution identity health
+        env:
+          EXPECTED_TEAM_ID: M42QAK8JZ9
+        run: bash ./scripts/check-apple-distribution-identity.sh
       
       - name: Install Provisioning Profile
+        env:
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
         run: |
           echo "Installing provisioning profile..."
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+
+          decode_base64() {
+            if base64 --decode </dev/null >/dev/null 2>&1; then
+              base64 --decode
+            else
+              base64 -D
+            fi
+          }
+
+          profile_tmp="$(mktemp /tmp/profile.XXXXXX.mobileprovision)"
+          profile_plist_tmp="$(mktemp /tmp/profile.XXXXXX.plist)"
+          trap 'rm -f "${profile_tmp}" "${profile_plist_tmp}"' EXIT
+
+          printf '%s' "${BUILD_PROVISION_PROFILE_BASE64}" | decode_base64 > "${profile_tmp}"
+          security cms -D -i "${profile_tmp}" > "${profile_plist_tmp}"
+
+          PROFILE_UUID="$(/usr/libexec/PlistBuddy -c "Print :UUID" "${profile_plist_tmp}" 2>/dev/null || true)"
+          PROFILE_APP_IDENTIFIER="$(/usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" "${profile_plist_tmp}" 2>/dev/null || true)"
+
+          if [ -z "${PROFILE_UUID}" ]; then
+            echo "::error::Unable to extract provisioning profile UUID."
+            exit 1
+          fi
+
+          if [[ "${PROFILE_APP_IDENTIFIER}" != *.${PRODUCT_BUNDLE_IDENTIFIER} ]]; then
+            echo "::error::Provisioning profile app identifier '${PROFILE_APP_IDENTIFIER}' does not target ${PRODUCT_BUNDLE_IDENTIFIER}."
+            exit 1
+          fi
+
+          cp "${profile_tmp}" ~/Library/MobileDevice/Provisioning\ Profiles/"${PROFILE_UUID}".mobileprovision
+          echo "PROVISIONING_PROFILE_UUID=${PROFILE_UUID}" >> "${GITHUB_ENV}"
+          echo "Installed profile UUID: ${PROFILE_UUID}"
           ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      - name: Verify provisioning profile health
+        env:
+          EXPECTED_BUNDLE_ID: ${{ env.PRODUCT_BUNDLE_IDENTIFIER }}
+          EXPECTED_TEAM_ID: M42QAK8JZ9
+        run: bash ./scripts/check-provisioning-profile-health.sh
+
+      - name: Resolve Swift Package Dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project aura/Aura.xcodeproj \
+            -scheme Aura \
+            -clonedSourcePackagesDirPath SourcePackages
+
+      - name: Validate enforce readiness prerequisites
+        if: env.GENERATE_HOROSCOPE_AUTH_MODE == 'enforce'
+        run: |
+          missing=0
+          if [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo "::error::Missing required repository secret for enforce mode: SUPABASE_SERVICE_ROLE_KEY"
+            missing=1
+          fi
+
+          if [ -z "${SUPABASE_PROJECT_REF:-}" ] && [ -z "${SUPABASE_BASE_URL:-}" ]; then
+            echo "::error::Provide SUPABASE_PROJECT_REF or SUPABASE_BASE_URL for enforce readiness checks."
+            missing=1
+          fi
+
+          if [ "${missing}" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Run auth fallback readiness gate (enforce only)
+        if: env.GENERATE_HOROSCOPE_AUTH_MODE == 'enforce'
+        env:
+          LOOKBACK_DAYS: ${{ env.ENFORCE_READINESS_LOOKBACK_DAYS }}
+          MAX_FALLBACKS: ${{ env.ENFORCE_READINESS_MAX_FALLBACKS }}
+          AUTH_CONTEXT_FILTER: ${{ env.ENFORCE_READINESS_AUTH_CONTEXT_FILTER }}
+        run: |
+          set -o pipefail
+          bash ./scripts/check-auth-fallback-readiness.sh | tee auth-fallback-readiness.log
+
+      - name: Upload auth fallback readiness log
+        if: always() && env.GENERATE_HOROSCOPE_AUTH_MODE == 'enforce'
+        uses: actions/upload-artifact@v4
+        with:
+          name: testflight-selfhosted-auth-fallback-readiness-log
+          path: auth-fallback-readiness.log
+          if-no-files-found: ignore
+
+      - name: Run cache degradation readiness gate (enforce only)
+        if: env.GENERATE_HOROSCOPE_AUTH_MODE == 'enforce'
+        env:
+          LOOKBACK_DAYS: ${{ env.ENFORCE_CACHE_READINESS_LOOKBACK_DAYS }}
+          MAX_DEGRADATIONS: ${{ env.ENFORCE_CACHE_READINESS_MAX_DEGRADATIONS }}
+          PREMIUM_FILTER: ${{ env.ENFORCE_CACHE_READINESS_PREMIUM_FILTER }}
+          REASON_FILTER: ${{ env.ENFORCE_CACHE_READINESS_REASON_FILTER }}
+        run: |
+          set -o pipefail
+          bash ./scripts/check-cache-degradation-readiness.sh | tee cache-degradation-readiness.log
+
+      - name: Upload cache degradation readiness log
+        if: always() && env.GENERATE_HOROSCOPE_AUTH_MODE == 'enforce'
+        uses: actions/upload-artifact@v4
+        with:
+          name: testflight-selfhosted-cache-degradation-readiness-log
+          path: cache-degradation-readiness.log
+          if-no-files-found: ignore
       
       - name: Build and Archive
         run: |
+          case "${GENERATE_HOROSCOPE_AUTH_MODE}" in
+            legacy|audit|enforce) ;;
+            *)
+              echo "::error::Unsupported GENERATE_HOROSCOPE_AUTH_MODE='${GENERATE_HOROSCOPE_AUTH_MODE}'"
+              exit 1
+              ;;
+          esac
+
+          OTHER_CODE_SIGN_FLAGS_VALUE=""
+          if [ "${KEYCHAIN_INSTALLED_FROM_SECRET:-false}" = "true" ]; then
+            OTHER_CODE_SIGN_FLAGS_VALUE="--keychain ${KEYCHAIN_NAME}"
+          fi
+
           echo "Building archive..."
+          set -o pipefail
           xcodebuild -project aura/Aura.xcodeproj \
             -scheme Aura \
+            -sdk iphoneos \
             -destination 'generic/platform=iOS' \
-            -archivePath build/Aura.xcarchive \
+            -archivePath "$ARCHIVE_PATH" \
+            -clonedSourcePackagesDirPath SourcePackages \
             archive \
-            CODE_SIGN_STYLE=Automatic \
-            DEVELOPMENT_TEAM=M42QAK8JZ9
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            DEVELOPMENT_TEAM=M42QAK8JZ9 \
+            PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_UUID" \
+            PRODUCT_BUNDLE_IDENTIFIER="$PRODUCT_BUNDLE_IDENTIFIER" \
+            GENERATE_HOROSCOPE_AUTH_MODE="$GENERATE_HOROSCOPE_AUTH_MODE" \
+            OTHER_CODE_SIGN_FLAGS="${OTHER_CODE_SIGN_FLAGS_VALUE}" \
+            2>&1 | tee build.log | tail -50
+
+          if [ ${PIPESTATUS[0]} -ne 0 ]; then
+            echo "::error::Archive build failed"
+            cat build.log
+            exit 1
+          fi
+
+      - name: Verify archived auth mode
+        run: |
+          APP_INFO_PLIST="${ARCHIVE_PATH}/Products/Applications/Aura.app/Info.plist"
+          if [ ! -f "${APP_INFO_PLIST}" ]; then
+            echo "::error::Archived Info.plist not found at ${APP_INFO_PLIST}"
+            exit 1
+          fi
+
+          ARCHIVED_AUTH_MODE="$(/usr/libexec/PlistBuddy -c "Print :GENERATE_HOROSCOPE_AUTH_MODE" "${APP_INFO_PLIST}" 2>/dev/null || true)"
+          if [ -z "${ARCHIVED_AUTH_MODE}" ]; then
+            echo "::error::GENERATE_HOROSCOPE_AUTH_MODE missing from archived Info.plist"
+            /usr/libexec/PlistBuddy -c "Print" "${APP_INFO_PLIST}" | tail -40
+            exit 1
+          fi
+
+          if [ "${ARCHIVED_AUTH_MODE}" != "${GENERATE_HOROSCOPE_AUTH_MODE}" ]; then
+            echo "::error::Archived auth mode '${ARCHIVED_AUTH_MODE}' does not match expected '${GENERATE_HOROSCOPE_AUTH_MODE}'"
+            exit 1
+          fi
+
+          echo "Archived Info.plist auth mode verified: ${ARCHIVED_AUTH_MODE}"
       
       - name: Create Export Options
         run: |
-          cat > ExportOptions.plist << EOF
+          cat > ExportOptions.plist << 'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
               <key>method</key>
-              <string>app-store</string>
+              <string>app-store-connect</string>
               <key>teamID</key>
               <string>M42QAK8JZ9</string>
+              <key>signingStyle</key>
+              <string>manual</string>
               <key>uploadSymbols</key>
               <true/>
-              <key>uploadBitcode</key>
-              <false/>
-              <key>signingStyle</key>
-              <string>automatic</string>
               <key>provisioningProfiles</key>
               <dict>
-                  <key>com.kopikoubou.aura</key>
-                  <string>match AppStore com.kopikoubou.aura</string>
+                  <key>${PRODUCT_BUNDLE_IDENTIFIER}</key>
+                  <string>${PROVISIONING_PROFILE_UUID}</string>
               </dict>
           </dict>
           </plist>
           EOF
+
+          sed -i '' "s/\${PRODUCT_BUNDLE_IDENTIFIER}/$PRODUCT_BUNDLE_IDENTIFIER/" ExportOptions.plist
+          sed -i '' "s/\${PROVISIONING_PROFILE_UUID}/$PROVISIONING_PROFILE_UUID/" ExportOptions.plist
+
+      - name: Create App Store Connect API key file
+        env:
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+        run: |
+          mkdir -p private_keys
+          printf '%s' "${APPLE_API_PRIVATE_KEY}" > "private_keys/AuthKey_${APPLE_API_KEY_ID}.p8"
+          chmod 600 "private_keys/AuthKey_${APPLE_API_KEY_ID}.p8"
       
       - name: Export IPA
         run: |
           xcodebuild -exportArchive \
-            -archivePath build/Aura.xcarchive \
+            -archivePath "$ARCHIVE_PATH" \
             -exportOptionsPlist ExportOptions.plist \
             -exportPath build/
       
@@ -78,12 +413,38 @@ jobs:
         env:
           APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
-          APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
         run: |
-          echo "Uploading to TestFlight..."
+          IPA_PATH="$(ls build/*.ipa | head -1)"
+          if [ -z "${IPA_PATH}" ]; then
+            echo "::error::No IPA found in build/."
+            ls -la build || true
+            exit 1
+          fi
+
+          echo "Uploading ${IPA_PATH} to TestFlight..."
           xcrun altool --upload-app \
             --type ios \
-            --file build/*.ipa \
-            --apiKey $APPLE_API_KEY_ID \
-            --apiIssuer $APPLE_ISSUER_ID \
-            --verbose
+            --file "${IPA_PATH}" \
+            --apiKey "${APPLE_API_KEY_ID}" \
+            --apiIssuer "${APPLE_ISSUER_ID}" \
+            --verbose \
+            2>&1 | tee upload.log
+
+          if [ ${PIPESTATUS[0]} -ne 0 ]; then
+            echo "::error::TestFlight upload failed"
+            cat upload.log
+            exit 1
+          fi
+
+      - name: Cleanup signing artifacts
+        if: always()
+        run: |
+          rm -rf private_keys
+
+          if [ -n "${PROVISIONING_PROFILE_UUID:-}" ]; then
+            rm -f ~/Library/MobileDevice/Provisioning\ Profiles/"${PROVISIONING_PROFILE_UUID}".mobileprovision || true
+          fi
+
+          if [ "${KEYCHAIN_INSTALLED_FROM_SECRET:-false}" = "true" ]; then
+            security delete-keychain "${KEYCHAIN_NAME}" || true
+          fi

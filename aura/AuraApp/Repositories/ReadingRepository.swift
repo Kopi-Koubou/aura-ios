@@ -13,29 +13,47 @@ final class ReadingRepository {
     
     func fetchLocal(user: UserProfile, category: SituationCategory, date: Date) async throws -> DailyReading? {
         let calendar = Calendar.current
-        // Simplified predicate without optional chaining
+        let startOfDay = calendar.startOfDay(for: date)
+        guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) else {
+            return nil
+        }
+
         let descriptor = FetchDescriptor<DailyReading>(predicate: #Predicate { reading in
-            reading.category == category
+            reading.date >= startOfDay
+                && reading.date < endOfDay
         })
         let readings = try modelContext.fetch(descriptor)
-        // Filter in memory for user and date match
-        return readings.first { 
-            $0.user?.id == user.id && calendar.isDate($0.date, inSameDayAs: date) 
+        return readings.first {
+            $0.category == category
+                && $0.user?.id == user.id
         }
     }
     
-    func generate(user: UserProfile, category: SituationCategory, isPremium: Bool = false) async throws -> DailyReading {
+    func generate(
+        user: UserProfile,
+        category: SituationCategory,
+        isPremium: Bool = false,
+        date: Date = Date()
+    ) async throws -> DailyReading {
         let content = try await openAIService.generateHoroscope(
+            userID: user.id,
             zodiacSign: user.zodiacSign,
             mbtiType: user.mbtiType,
             category: category,
-            isPremium: isPremium
+            isPremium: isPremium,
+            date: date
         )
-        
-        let reading = DailyReading(user: user, category: category, content: content, isPremium: isPremium)
+
+        let reading = DailyReading(
+            user: user,
+            category: category,
+            content: content,
+            isPremium: isPremium,
+            date: date
+        )
         modelContext.insert(reading)
         try modelContext.save()
-        
+
         return reading
     }
 }

@@ -1,0 +1,21 @@
+{
+  "name": "Aura",
+  "palette": "warm-neutral",
+  "accentColor": "#D4632F",
+  "fontPairing": {
+    "heading": "SF Pro (serif design variant)",
+    "body": "SF Pro"
+  },
+  "darkMode": true,
+  "customTokens": {
+    "background-light": "#F8F7F2",
+    "background-dark": "#171718",
+    "card-light": "#FFFFFF",
+    "card-dark": "#262628",
+    "card-border-light": "rgba(0,0,0,0.08)",
+    "card-border-dark": "rgba(255,255,255,0.12)",
+    "score-tint-high": "#299854",
+    "score-tint-mid": "#C7762B",
+    "score-tint-low": "#AE473D"
+  }
+}

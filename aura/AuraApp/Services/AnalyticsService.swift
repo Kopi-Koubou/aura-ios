@@ -12,6 +12,15 @@ enum AnalyticsEvent: String {
     case subscriptionCompleted = "subscription_completed"
     case referralCodeGenerated = "referral_code_generated"
     case referralCodeRedeemed = "referral_code_redeemed"
+    case streakMilestone = "streak_milestone"
+    case streakReminderEnabled = "streak_reminder_enabled"
+    case streakReminderDisabled = "streak_reminder_disabled"
+    case historyViewed = "history_viewed"
+    case streakReminderPromptShown = "streak_reminder_prompt_shown"
+    case streakReminderPromptDismissed = "streak_reminder_prompt_dismissed"
+    case retrogradeAlertViewed = "retrograde_alert_viewed"
+    case retrogradeAlertEnabled = "retrograde_alert_enabled"
+    case retrogradeAlertDisabled = "retrograde_alert_disabled"
 }
 
 final class AnalyticsService {

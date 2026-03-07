@@ -1,0 +1,82 @@
+name: Deploy Guardrails
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-guardrails-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  parity-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify deploy artifact parity
+        run: bash ./scripts/check-deploy-parity.sh
+
+      - name: Run readiness fixture regression tests
+        run: bash ./scripts/run-readiness-fixture-tests.sh
+
+      - name: Run Apple Distribution identity fixture regression tests
+        run: bash ./scripts/run-apple-distribution-identity-fixture-tests.sh
+
+      - name: Run provisioning profile health fixture regression tests
+        run: bash ./scripts/run-provisioning-profile-health-fixture-tests.sh
+
+      - name: Run auth rollout fixture regression tests
+        run: bash ./scripts/run-auth-rollout-fixture-tests.sh
+
+      - name: Run warmup combo fixture regression tests
+        run: bash ./scripts/run-warmup-combo-fixture-tests.sh
+
+      - name: Run warm-cache fixture regression tests
+        run: bash ./scripts/run-warm-generated-cache-fixture-tests.sh
+
+      - name: Run warm-cache metrics summary fixture regression tests
+        run: bash ./scripts/run-warm-cache-metrics-summary-fixture-tests.sh
+
+      - name: Run warmup-threshold apply fixture regression tests
+        run: bash ./scripts/run-warmup-threshold-apply-fixture-tests.sh
+
+      - name: Run warmup-threshold calibration fixture regression tests
+        run: bash ./scripts/run-propose-warmup-threshold-fixture-tests.sh
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Run edge-function regression tests
+        env:
+          REQUIRE_DENO: "true"
+        run: bash ./scripts/run-edge-function-tests.sh
+
+  critical-swift-tests:
+    needs:
+      - parity-check
+    runs-on: macos-15
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.2'
+
+      - name: Run critical Swift regression tests
+        run: bash ./scripts/run-critical-swift-tests.sh

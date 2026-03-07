@@ -18,10 +18,14 @@ NC='\033[0m'
 
 # Check if running from correct directory
 if [ ! -d "edge-functions" ] || [ ! -f "config.toml" ]; then
-    echo -e "${RED}Error: Must run from /Users/devl/clawd/Aura directory${NC}"
+    echo -e "${RED}Error: Must run from the repository root (expects edge-functions/ and config.toml).${NC}"
     echo "Current directory: $(pwd)"
     exit 1
 fi
+
+echo -e "${BLUE}Preflight: Validating deploy artifact parity...${NC}"
+bash ./scripts/check-deploy-parity.sh
+echo ""
 
 # Step 1: Get project reference
 echo -e "${BLUE}Step 1: Supabase Project Configuration${NC}"
@@ -70,21 +74,18 @@ echo ""
 
 # Step 4: Apply database migrations
 echo -e "${BLUE}Step 4: Applying database migrations...${NC}"
-if [ -f "20260208_referral_and_share_system.sql" ]; then
-    echo "Found migration file. Applying..."
-    if supabase db push; then
-        echo -e "${GREEN}✓ Migrations applied${NC}"
-    else
-        echo -e "${YELLOW}⚠ Migration push failed or already applied${NC}"
-    fi
+if supabase db push; then
+    echo -e "${GREEN}✓ Migrations applied${NC}"
 else
-    echo -e "${YELLOW}⚠ No migration file found${NC}"
+    echo -e "${RED}✗ Migration push failed${NC}"
+    echo "Resolve migration issues before deploying functions."
+    exit 1
 fi
 echo ""
 
 # Step 5: Deploy functions
 echo -e "${BLUE}Step 5: Deploying edge functions...${NC}"
-FUNCTIONS=("referral-redeem" "track-share" "validate-receipt" "sync-subscription")
+FUNCTIONS=("referral-redeem" "track-share" "generate-horoscope" "validate-receipt" "sync-subscription")
 
 for func in "${FUNCTIONS[@]}"; do
     echo -n "Deploying $func... "
@@ -106,13 +107,17 @@ if [ "$MANUAL_CREDENTIALS" = true ]; then
     read -p "REVENUECAT_API_KEY: " REVENUECAT_API_KEY
     read -p "REVENUECAT_WEBHOOK_SECRET: " REVENUECAT_WEBHOOK_SECRET
     read -p "POSTHOG_API_KEY (optional): " POSTHOG_API_KEY
+    read -p "OPENAI_API_KEY (required for generate-horoscope): " OPENAI_API_KEY
+    read -p "CACHE_WARM_SECRET (required for cache warmup): " CACHE_WARM_SECRET
 else
     echo "Fetching from 1Password..."
     SUPABASE_URL=$(op item get "Aura - Supabase" --vault="Kato" --fields "Project URL" --reveal 2>/dev/null || echo "")
     SUPABASE_SERVICE_ROLE_KEY=$(op item get "Aura - Supabase" --vault="Kato" --fields "Service Key" --reveal 2>/dev/null || echo "")
+    CACHE_WARM_SECRET=$(op item get "Aura - Supabase" --vault="Kato" --fields "Cache Warm Secret" --reveal 2>/dev/null || echo "")
     REVENUECAT_API_KEY=$(op item get "RevenueCat - Aura" --vault="Kato" --fields "API Key" --reveal 2>/dev/null || echo "")
     REVENUECAT_WEBHOOK_SECRET=$(op item get "RevenueCat - Aura" --vault="Kato" --fields "Webhook Secret" --reveal 2>/dev/null || echo "")
     POSTHOG_API_KEY=$(op item get "PostHog - Aura" --vault="Kato" --fields "API Key" --reveal 2>/dev/null || echo "")
+    OPENAI_API_KEY=$(op item get "OpenAI - Aura" --vault="Kato" --fields "API Key" --reveal 2>/dev/null || echo "")
 fi
 
 echo "Setting secrets..."
@@ -121,6 +126,8 @@ echo "Setting secrets..."
 [ -n "$REVENUECAT_API_KEY" ] && supabase secrets set --project-ref "$SUPABASE_PROJECT_REF" "REVENUECAT_API_KEY=$REVENUECAT_API_KEY" && echo -e "${GREEN}✓ REVENUECAT_API_KEY${NC}"
 [ -n "$REVENUECAT_WEBHOOK_SECRET" ] && supabase secrets set --project-ref "$SUPABASE_PROJECT_REF" "REVENUECAT_WEBHOOK_SECRET=$REVENUECAT_WEBHOOK_SECRET" && echo -e "${GREEN}✓ REVENUECAT_WEBHOOK_SECRET${NC}"
 [ -n "$POSTHOG_API_KEY" ] && supabase secrets set --project-ref "$SUPABASE_PROJECT_REF" "POSTHOG_API_KEY=$POSTHOG_API_KEY" && echo -e "${GREEN}✓ POSTHOG_API_KEY${NC}"
+[ -n "$OPENAI_API_KEY" ] && supabase secrets set --project-ref "$SUPABASE_PROJECT_REF" "OPENAI_API_KEY=$OPENAI_API_KEY" && echo -e "${GREEN}✓ OPENAI_API_KEY${NC}"
+[ -n "$CACHE_WARM_SECRET" ] && supabase secrets set --project-ref "$SUPABASE_PROJECT_REF" "CACHE_WARM_SECRET=$CACHE_WARM_SECRET" && echo -e "${GREEN}✓ CACHE_WARM_SECRET${NC}"
 echo ""
 
 # Step 7: Verify deployment
@@ -131,6 +138,7 @@ echo "Testing endpoints..."
 echo ""
 echo "Referral Redeem: $BASE_URL/referral-redeem"
 echo "Track Share:     $BASE_URL/track-share"
+echo "Generate Horoscope: $BASE_URL/generate-horoscope"
 echo "Validate Receipt: $BASE_URL/validate-receipt"
 echo "Sync Subscription: $BASE_URL/sync-subscription"
 echo ""
@@ -149,6 +157,9 @@ echo "     SUPABASE_URL: $SUPABASE_URL"
 echo ""
 echo "  3. Test the endpoints (see DEPLOYMENT.md for examples)"
 echo ""
-echo "  4. Monitor functions in Supabase Dashboard:"
+echo "  4. Warm shared cache:"
+echo "     bash ./scripts/warm-generated-cache.sh"
+echo ""
+echo "  5. Monitor functions in Supabase Dashboard:"
 echo "     https://supabase.com/dashboard/project/$SUPABASE_PROJECT_REF/functions"
 echo ""

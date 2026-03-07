@@ -20,6 +20,9 @@ if [ ! -f "supabase/config.toml" ]; then
     exit 1
 fi
 
+echo -e "${YELLOW}Validating deploy artifact parity...${NC}"
+bash ./scripts/check-deploy-parity.sh
+
 # Function to deploy edge functions
 deploy_function() {
     local func_name=$1
@@ -47,6 +50,7 @@ echo ""
 # Deploy each function
 deploy_function "referral-redeem"
 deploy_function "track-share"
+deploy_function "generate-horoscope"
 deploy_function "validate-receipt"
 deploy_function "sync-subscription"
 
@@ -58,10 +62,13 @@ echo ""
 echo "Function URLs:"
 echo "  • referral-redeem:  https://$SUPABASE_PROJECT_REF.supabase.co/functions/v1/referral-redeem"
 echo "  • track-share:      https://$SUPABASE_PROJECT_REF.supabase.co/functions/v1/track-share"
+echo "  • generate-horoscope: https://$SUPABASE_PROJECT_REF.supabase.co/functions/v1/generate-horoscope"
 echo "  • validate-receipt: https://$SUPABASE_PROJECT_REF.supabase.co/functions/v1/validate-receipt"
 echo "  • sync-subscription: https://$SUPABASE_PROJECT_REF.supabase.co/functions/v1/sync-subscription"
 echo ""
 echo "Next steps:"
 echo "  1. Set required secrets using: ./scripts/set-secrets.sh"
-echo "  2. Test functions using: ./scripts/test-functions.sh"
-echo "  3. Configure RevenueCat webhook to point to sync-subscription URL"
+echo "  2. Warm shared horoscope cache: bash ./scripts/warm-generated-cache.sh"
+echo "  3. Test functions using: ./scripts/test-functions.sh"
+echo "  4. Check auth fallback readiness: bash ./scripts/check-auth-fallback-readiness.sh"
+echo "  5. Configure RevenueCat webhook to point to sync-subscription URL"

@@ -1,0 +1,42 @@
+name: Workflow Lint
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/*.yml"
+      - ".github/workflows/*.yaml"
+      - "scripts/lint-workflows.sh"
+      - "aura/scripts/lint-workflows.sh"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/*.yml"
+      - ".github/workflows/*.yaml"
+      - "scripts/lint-workflows.sh"
+      - "aura/scripts/lint-workflows.sh"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workflow-lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Parse workflow YAML files
+        run: bash ./scripts/lint-workflows.sh --skip-actionlint
+
+      - name: Run actionlint semantic checks
+        uses: rhysd/actionlint@v1
+        with:
+          args: -color

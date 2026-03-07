@@ -1,0 +1,22 @@
+# Popular zodiac|MBTI combinations for generated-cache warmup.
+# Format: Zodiac|MBTI
+Aries|INTJ
+Aries|ENFP
+Taurus|ISFJ
+Gemini|ENTP
+Cancer|INFJ
+Leo|ENTJ
+Virgo|ISTJ
+Libra|ENFJ
+Scorpio|INTP
+Sagittarius|ESTP
+Capricorn|ISTJ
+Aquarius|INTJ
+Pisces|INFP
+Aries|ESTP
+Taurus|ISFP
+Gemini|ENFP
+Cancer|ISFJ
+Leo|ESFP
+Virgo|INTJ
+Libra|INFP

@@ -81,6 +81,9 @@ verify_jwt = true
 [functions.track-share]
 verify_jwt = false
 
+[functions.generate-horoscope]
+verify_jwt = false
+
 [functions.validate-receipt]
 verify_jwt = true
 

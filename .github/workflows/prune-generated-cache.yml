@@ -1,0 +1,88 @@
+name: Prune Generated Cache
+
+on:
+  schedule:
+    - cron: "20 1 * * *"
+  workflow_dispatch:
+    inputs:
+      retention_days:
+        description: "UTC days to retain in generated_reading_cache"
+        required: false
+        default: "3"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  prune-cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: prune-generated-cache
+      cancel-in-progress: false
+
+    env:
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      SUPABASE_BASE_URL: ${{ secrets.SUPABASE_BASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      CACHE_RETENTION_DAYS: ${{ github.event.inputs.retention_days }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required secrets
+        run: |
+          missing=0
+          for secret_name in SUPABASE_SERVICE_ROLE_KEY; do
+            if [ -z "${!secret_name:-}" ]; then
+              echo "::error::Missing required repository secret: ${secret_name}"
+              missing=1
+            fi
+          done
+
+          if [ -z "${SUPABASE_PROJECT_REF:-}" ] && [ -z "${SUPABASE_BASE_URL:-}" ]; then
+            echo "::error::Provide SUPABASE_PROJECT_REF or SUPABASE_BASE_URL."
+            missing=1
+          fi
+
+          if [ "${missing}" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Resolve defaults
+        run: |
+          if [ -z "${CACHE_RETENTION_DAYS:-}" ]; then
+            CACHE_RETENTION_DAYS="3"
+          fi
+
+          if ! [[ "${CACHE_RETENTION_DAYS}" =~ ^[0-9]+$ ]] || [ "${CACHE_RETENTION_DAYS}" -lt 1 ] || [ "${CACHE_RETENTION_DAYS}" -gt 30 ]; then
+            echo "::error::retention_days must be an integer between 1 and 30."
+            exit 1
+          fi
+
+          echo "CACHE_RETENTION_DAYS=${CACHE_RETENTION_DAYS}" >> "${GITHUB_ENV}"
+
+      - name: Run prune operation
+        run: |
+          set -o pipefail
+          bash ./scripts/prune-generated-cache.sh | tee prune-generated-cache.log
+
+      - name: Upload prune log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prune-generated-cache-log
+          path: prune-generated-cache.log
+          if-no-files-found: ignore
+
+      - name: Append summary
+        if: always()
+        run: |
+          {
+            echo "## Generated Cache Prune"
+            echo "- Retention days: \`${CACHE_RETENTION_DAYS}\`"
+            echo "- Supabase target: \`${SUPABASE_PROJECT_REF:-${SUPABASE_BASE_URL:-"(unset)"}}\`"
+            echo "- Workflow run date (UTC): \`$(date -u +%F)\`"
+          } >> "${GITHUB_STEP_SUMMARY}"

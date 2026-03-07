@@ -1,0 +1,350 @@
+name: Readiness Page-Limit Calibration
+
+on:
+  schedule:
+    - cron: "25 1 * * *"
+  workflow_dispatch:
+    inputs:
+      artifact_limit:
+        description: "Maximum readiness metrics artifacts per type to analyze"
+        required: false
+        default: "20"
+        type: string
+      threshold_min_runs:
+        description: "Minimum runs required before applying page-limit updates"
+        required: false
+        default: "10"
+        type: string
+      page_limit_buffer_pages:
+        description: "Buffer added above observed p95 scan depth"
+        required: false
+        default: "1"
+        type: string
+      min_recommended_open_issues_max_pages:
+        description: "Lower bound for recommended open-issue scan pages"
+        required: false
+        default: "1"
+        type: string
+      min_recommended_closed_issues_max_pages:
+        description: "Lower bound for recommended closed-issue scan pages"
+        required: false
+        default: "1"
+        type: string
+      allow_low_confidence:
+        description: "Allow recommendations below minimum run confidence"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+      fail_on_low_confidence:
+        description: "Fail workflow when confidence guard is triggered"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+      low_confidence_streak_threshold:
+        description: "Consecutive scheduled low-confidence runs required before escalation issue upsert"
+        required: false
+        default: "3"
+        type: string
+      low_confidence_history_lookback_runs:
+        description: "Number of prior scheduled runs inspected to calculate low-confidence streak"
+        required: false
+        default: "10"
+        type: string
+      open_pr:
+        description: "Open a PR automatically when drift is detected"
+        required: false
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+permissions:
+  actions: read
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  calibrate-page-limits:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: readiness-page-limit-calibration
+      cancel-in-progress: false
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+      READINESS_PAGE_LIMIT_GITHUB_REPOSITORY: ${{ github.repository }}
+      READINESS_PAGE_LIMIT_ARTIFACT_LIMIT: ${{ github.event.inputs.artifact_limit }}
+      READINESS_THRESHOLD_MIN_RUNS: ${{ github.event.inputs.threshold_min_runs }}
+      READINESS_ESCALATION_PAGE_LIMIT_BUFFER_PAGES: ${{ github.event.inputs.page_limit_buffer_pages }}
+      MIN_RECOMMENDED_OPEN_ISSUES_MAX_PAGES: ${{ github.event.inputs.min_recommended_open_issues_max_pages }}
+      MIN_RECOMMENDED_CLOSED_ISSUES_MAX_PAGES: ${{ github.event.inputs.min_recommended_closed_issues_max_pages }}
+      READINESS_THRESHOLD_ALLOW_LOW_CONFIDENCE: ${{ github.event.inputs.allow_low_confidence }}
+      READINESS_THRESHOLD_FAIL_ON_LOW_CONFIDENCE: ${{ github.event.inputs.fail_on_low_confidence }}
+      READINESS_LOW_CONFIDENCE_STREAK_THRESHOLD_INPUT: ${{ github.event.inputs.low_confidence_streak_threshold }}
+      READINESS_LOW_CONFIDENCE_HISTORY_LOOKBACK_RUNS_INPUT: ${{ github.event.inputs.low_confidence_history_lookback_runs }}
+      READINESS_LOW_CONFIDENCE_ESCALATION_OPEN_ISSUES_MAX_PAGES_INPUT: "10"
+      READINESS_LOW_CONFIDENCE_ESCALATION_CLOSED_ISSUES_MAX_PAGES_INPUT: "10"
+      READINESS_PAGE_LIMIT_OPEN_PR_INPUT: ${{ github.event.inputs.open_pr }}
+      READINESS_PAGE_LIMIT_APPLY_CHANGES: "true"
+      READINESS_PAGE_LIMIT_OUTPUT_DIR: ./ops/readiness-page-limit-calibration
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve defaults
+        run: |
+          if [ -z "${READINESS_PAGE_LIMIT_ARTIFACT_LIMIT:-}" ]; then
+            READINESS_PAGE_LIMIT_ARTIFACT_LIMIT="20"
+          fi
+          if [ -z "${READINESS_THRESHOLD_MIN_RUNS:-}" ]; then
+            READINESS_THRESHOLD_MIN_RUNS="10"
+          fi
+          if [ -z "${READINESS_ESCALATION_PAGE_LIMIT_BUFFER_PAGES:-}" ]; then
+            READINESS_ESCALATION_PAGE_LIMIT_BUFFER_PAGES="1"
+          fi
+          if [ -z "${MIN_RECOMMENDED_OPEN_ISSUES_MAX_PAGES:-}" ]; then
+            MIN_RECOMMENDED_OPEN_ISSUES_MAX_PAGES="1"
+          fi
+          if [ -z "${MIN_RECOMMENDED_CLOSED_ISSUES_MAX_PAGES:-}" ]; then
+            MIN_RECOMMENDED_CLOSED_ISSUES_MAX_PAGES="1"
+          fi
+          if [ -z "${READINESS_THRESHOLD_ALLOW_LOW_CONFIDENCE:-}" ]; then
+            READINESS_THRESHOLD_ALLOW_LOW_CONFIDENCE="false"
+          fi
+          if [ -z "${READINESS_THRESHOLD_FAIL_ON_LOW_CONFIDENCE:-}" ]; then
+            READINESS_THRESHOLD_FAIL_ON_LOW_CONFIDENCE="false"
+          fi
+          if [ -z "${READINESS_LOW_CONFIDENCE_STREAK_THRESHOLD_INPUT:-}" ]; then
+            READINESS_LOW_CONFIDENCE_STREAK_THRESHOLD_INPUT="3"
+          fi
+          if [ -z "${READINESS_LOW_CONFIDENCE_HISTORY_LOOKBACK_RUNS_INPUT:-}" ]; then
+            READINESS_LOW_CONFIDENCE_HISTORY_LOOKBACK_RUNS_INPUT="10"
+          fi
+          if [ -z "${READINESS_LOW_CONFIDENCE_ESCALATION_OPEN_ISSUES_MAX_PAGES_INPUT:-}" ]; then
+            READINESS_LOW_CONFIDENCE_ESCALATION_OPEN_ISSUES_MAX_PAGES_INPUT="10"
+          fi
+          if [ -z "${READINESS_LOW_CONFIDENCE_ESCALATION_CLOSED_ISSUES_MAX_PAGES_INPUT:-}" ]; then
+            READINESS_LOW_CONFIDENCE_ESCALATION_CLOSED_ISSUES_MAX_PAGES_INPUT="10"
+          fi
+          if [ -z "${READINESS_PAGE_LIMIT_OPEN_PR_INPUT:-}" ]; then
+            READINESS_PAGE_LIMIT_OPEN_PR_INPUT="true"
+          fi
+
+          for integer_value in \
+            READINESS_PAGE_LIMIT_ARTIFACT_LIMIT \
+            READINESS_THRESHOLD_MIN_RUNS \
+            READINESS_ESCALATION_PAGE_LIMIT_BUFFER_PAGES \
+            MIN_RECOMMENDED_OPEN_ISSUES_MAX_PAGES \
+            MIN_RECOMMENDED_CLOSED_ISSUES_MAX_PAGES \
+            READINESS_LOW_CONFIDENCE_STREAK_THRESHOLD_INPUT \
+            READINESS_LOW_CONFIDENCE_HISTORY_LOOKBACK_RUNS_INPUT \
+            READINESS_LOW_CONFIDENCE_ESCALATION_OPEN_ISSUES_MAX_PAGES_INPUT \
+            READINESS_LOW_CONFIDENCE_ESCALATION_CLOSED_ISSUES_MAX_PAGES_INPUT; do
+            value="${!integer_value}"
+            if ! [[ "${value}" =~ ^[0-9]+$ ]]; then
+              echo "::error::${integer_value} must be an integer."
+              exit 1
+            fi
+          done
+
+          for bool_value in \
+            READINESS_THRESHOLD_ALLOW_LOW_CONFIDENCE \
+            READINESS_THRESHOLD_FAIL_ON_LOW_CONFIDENCE \
+            READINESS_PAGE_LIMIT_OPEN_PR_INPUT; do
+            value="${!bool_value}"
+            if [ "${value}" != "true" ] && [ "${value}" != "false" ]; then
+              echo "::error::${bool_value} must be true or false."
+              exit 1
+            fi
+          done
+
+          echo "READINESS_PAGE_LIMIT_ARTIFACT_LIMIT=${READINESS_PAGE_LIMIT_ARTIFACT_LIMIT}" >> "${GITHUB_ENV}"
+          echo "READINESS_THRESHOLD_MIN_RUNS=${READINESS_THRESHOLD_MIN_RUNS}" >> "${GITHUB_ENV}"
+          echo "READINESS_ESCALATION_PAGE_LIMIT_BUFFER_PAGES=${READINESS_ESCALATION_PAGE_LIMIT_BUFFER_PAGES}" >> "${GITHUB_ENV}"
+          echo "MIN_RECOMMENDED_OPEN_ISSUES_MAX_PAGES=${MIN_RECOMMENDED_OPEN_ISSUES_MAX_PAGES}" >> "${GITHUB_ENV}"
+          echo "MIN_RECOMMENDED_CLOSED_ISSUES_MAX_PAGES=${MIN_RECOMMENDED_CLOSED_ISSUES_MAX_PAGES}" >> "${GITHUB_ENV}"
+          echo "READINESS_THRESHOLD_ALLOW_LOW_CONFIDENCE=${READINESS_THRESHOLD_ALLOW_LOW_CONFIDENCE}" >> "${GITHUB_ENV}"
+          echo "READINESS_THRESHOLD_FAIL_ON_LOW_CONFIDENCE=${READINESS_THRESHOLD_FAIL_ON_LOW_CONFIDENCE}" >> "${GITHUB_ENV}"
+          echo "READINESS_LOW_CONFIDENCE_STREAK_THRESHOLD=${READINESS_LOW_CONFIDENCE_STREAK_THRESHOLD_INPUT}" >> "${GITHUB_ENV}"
+          echo "READINESS_LOW_CONFIDENCE_HISTORY_LOOKBACK_RUNS=${READINESS_LOW_CONFIDENCE_HISTORY_LOOKBACK_RUNS_INPUT}" >> "${GITHUB_ENV}"
+          echo "READINESS_LOW_CONFIDENCE_ESCALATION_OPEN_ISSUES_MAX_PAGES=${READINESS_LOW_CONFIDENCE_ESCALATION_OPEN_ISSUES_MAX_PAGES_INPUT}" >> "${GITHUB_ENV}"
+          echo "READINESS_LOW_CONFIDENCE_ESCALATION_CLOSED_ISSUES_MAX_PAGES=${READINESS_LOW_CONFIDENCE_ESCALATION_CLOSED_ISSUES_MAX_PAGES_INPUT}" >> "${GITHUB_ENV}"
+          echo "READINESS_PAGE_LIMIT_OPEN_PR=${READINESS_PAGE_LIMIT_OPEN_PR_INPUT}" >> "${GITHUB_ENV}"
+
+      - name: Calibrate readiness page limits from escalation metrics artifacts
+        id: calibrate
+        run: |
+          set -o pipefail
+          bash ./scripts/propose-readiness-page-limit-update.sh | tee readiness-page-limit-calibration.log
+
+      - name: Annotate low-confidence calibration result
+        if: always()
+        run: |
+          low_confidence_guard="${{ steps.calibrate.outputs.low_confidence_guard_triggered }}"
+          low_confidence_reason="${{ steps.calibrate.outputs.low_confidence_reason }}"
+          fail_on_low_confidence="${READINESS_THRESHOLD_FAIL_ON_LOW_CONFIDENCE:-false}"
+
+          if [ "${low_confidence_guard}" != "true" ]; then
+            exit 0
+          fi
+
+          if [ -z "${low_confidence_reason}" ]; then
+            low_confidence_reason="Low-confidence recommendation triggered by confidence guard."
+          fi
+
+          if [ "${fail_on_low_confidence}" = "true" ]; then
+            echo "::error::Readiness page-limit calibration low-confidence: ${low_confidence_reason}"
+          else
+            echo "::warning::Readiness page-limit calibration low-confidence: ${low_confidence_reason}"
+          fi
+
+      - name: Resolve low-confidence escalation policy
+        if: always()
+        id: low_confidence_escalation
+        env:
+          CALIBRATION_ESCALATION_KIND: readiness_page_limit
+          CALIBRATION_LOW_CONFIDENCE_TRIGGERED: ${{ steps.calibrate.outputs.low_confidence_guard_triggered }}
+          CALIBRATION_LOW_CONFIDENCE_REASON: ${{ steps.calibrate.outputs.low_confidence_reason }}
+          CALIBRATION_LOW_CONFIDENCE_STREAK_THRESHOLD: ${{ env.READINESS_LOW_CONFIDENCE_STREAK_THRESHOLD }}
+          CALIBRATION_LOW_CONFIDENCE_HISTORY_LOOKBACK_RUNS: ${{ env.READINESS_LOW_CONFIDENCE_HISTORY_LOOKBACK_RUNS }}
+          CALIBRATION_ESCALATION_EVENT_NAME: ${{ github.event_name }}
+          CALIBRATION_ESCALATION_ALLOW_NON_SCHEDULE: "false"
+          CALIBRATION_ESCALATION_DRY_RUN: "false"
+          CALIBRATION_ESCALATION_GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          bash ./scripts/resolve-calibration-low-confidence-escalation.sh
+
+      - name: Escalate repeated low-confidence streak
+        if: ${{ steps.low_confidence_escalation.outputs.escalation_status == 'failure' }}
+        id: escalate_low_confidence_failure
+        env:
+          READINESS_ESCALATION_KIND: ${{ steps.low_confidence_escalation.outputs.escalation_kind }}
+          READINESS_ESCALATION_STATUS: failure
+          READINESS_LOG_FILE: readiness-page-limit-calibration.log
+          READINESS_ESCALATION_DRY_RUN: "false"
+          READINESS_ESCALATION_OPEN_ISSUES_MAX_PAGES: ${{ env.READINESS_LOW_CONFIDENCE_ESCALATION_OPEN_ISSUES_MAX_PAGES }}
+          READINESS_ESCALATION_CLOSED_ISSUES_MAX_PAGES: ${{ env.READINESS_LOW_CONFIDENCE_ESCALATION_CLOSED_ISSUES_MAX_PAGES }}
+          CALIBRATION_WORKFLOW_FILE: ${{ steps.low_confidence_escalation.outputs.workflow_file }}
+          CALIBRATION_ESCALATION_EVENT_NAME: ${{ github.event_name }}
+          CALIBRATION_LOW_CONFIDENCE_STREAK_THRESHOLD: ${{ steps.low_confidence_escalation.outputs.low_confidence_streak_threshold }}
+          CALIBRATION_CURRENT_LOW_CONFIDENCE_STREAK: ${{ steps.low_confidence_escalation.outputs.current_low_confidence_streak }}
+          CALIBRATION_LOW_CONFIDENCE_REASON: ${{ steps.low_confidence_escalation.outputs.low_confidence_reason }}
+          CALIBRATION_FAIL_ON_LOW_CONFIDENCE: ${{ env.READINESS_THRESHOLD_FAIL_ON_LOW_CONFIDENCE }}
+        run: |
+          bash ./scripts/run-readiness-escalation.sh
+
+      - name: Resolve low-confidence escalation issue on recovery
+        if: ${{ steps.low_confidence_escalation.outputs.escalation_status == 'recovered' }}
+        id: escalate_low_confidence_recovery
+        env:
+          READINESS_ESCALATION_KIND: ${{ steps.low_confidence_escalation.outputs.escalation_kind }}
+          READINESS_ESCALATION_STATUS: recovered
+          READINESS_LOG_FILE: readiness-page-limit-calibration.log
+          READINESS_ESCALATION_DRY_RUN: "false"
+          READINESS_ESCALATION_OPEN_ISSUES_MAX_PAGES: ${{ env.READINESS_LOW_CONFIDENCE_ESCALATION_OPEN_ISSUES_MAX_PAGES }}
+          READINESS_ESCALATION_CLOSED_ISSUES_MAX_PAGES: ${{ env.READINESS_LOW_CONFIDENCE_ESCALATION_CLOSED_ISSUES_MAX_PAGES }}
+          CALIBRATION_WORKFLOW_FILE: ${{ steps.low_confidence_escalation.outputs.workflow_file }}
+          CALIBRATION_ESCALATION_EVENT_NAME: ${{ github.event_name }}
+          CALIBRATION_LOW_CONFIDENCE_STREAK_THRESHOLD: ${{ steps.low_confidence_escalation.outputs.low_confidence_streak_threshold }}
+          CALIBRATION_CURRENT_LOW_CONFIDENCE_STREAK: ${{ steps.low_confidence_escalation.outputs.current_low_confidence_streak }}
+          CALIBRATION_LOW_CONFIDENCE_REASON: ${{ steps.low_confidence_escalation.outputs.low_confidence_reason }}
+          CALIBRATION_FAIL_ON_LOW_CONFIDENCE: ${{ env.READINESS_THRESHOLD_FAIL_ON_LOW_CONFIDENCE }}
+        run: |
+          bash ./scripts/run-readiness-escalation.sh
+
+      - name: Upload calibration artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: readiness-page-limit-calibration
+          path: |
+            readiness-page-limit-calibration.log
+            ops/readiness-page-limit-calibration
+          if-no-files-found: ignore
+
+      - name: Open pull request for readiness page-limit drift
+        id: create_pr
+        if: ${{ steps.calibrate.outputs.drift_detected == 'true' && env.READINESS_PAGE_LIMIT_OPEN_PR == 'true' }}
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ github.token }}
+          commit-message: "chore: calibrate readiness escalation page limits"
+          branch: automation/readiness-page-limit-calibration
+          delete-branch: true
+          title: "chore: calibrate readiness escalation page limits"
+          body: |
+            ## Readiness Page-Limit Calibration
+            - Runs analyzed: `${{ steps.calibrate.outputs.runs_analyzed }}`
+            - Metrics files analyzed: `${{ steps.calibrate.outputs.metrics_files_analyzed }}`
+            - Recommended open max pages: `${{ steps.calibrate.outputs.recommended_open_issues_max_pages }}`
+            - Recommended closed max pages: `${{ steps.calibrate.outputs.recommended_closed_issues_max_pages }}`
+            - Generated at (UTC): `${{ steps.calibrate.outputs.generated_at_utc }}`
+
+            Generated by `.github/workflows/readiness-page-limit-calibration.yml`.
+          add-paths: |
+            .github/workflows/auth-fallback-readiness.yml
+            .github/workflows/cache-degradation-readiness.yml
+
+      - name: Append summary
+        if: always()
+        run: |
+          pr_url="${{ steps.create_pr.outputs.pull-request-url }}"
+          low_confidence_reason="${{ steps.calibrate.outputs.low_confidence_reason }}"
+          low_confidence_escalation_issue_action="${{ steps.escalate_low_confidence_failure.outputs.issue_action }}"
+          low_confidence_escalation_issue_number="${{ steps.escalate_low_confidence_failure.outputs.issue_number }}"
+          if [ -z "${pr_url}" ]; then
+            pr_url="(none)"
+          fi
+          if [ -z "${low_confidence_reason}" ]; then
+            low_confidence_reason="(none)"
+          fi
+          if [ -z "${low_confidence_escalation_issue_action}" ]; then
+            low_confidence_escalation_issue_action="${{ steps.escalate_low_confidence_recovery.outputs.issue_action }}"
+          fi
+          if [ -z "${low_confidence_escalation_issue_number}" ]; then
+            low_confidence_escalation_issue_number="${{ steps.escalate_low_confidence_recovery.outputs.issue_number }}"
+          fi
+          if [ -z "${low_confidence_escalation_issue_action}" ]; then
+            low_confidence_escalation_issue_action="(none)"
+          fi
+          if [ -z "${low_confidence_escalation_issue_number}" ]; then
+            low_confidence_escalation_issue_number="(none)"
+          fi
+
+          {
+            echo "## Readiness Page-Limit Calibration"
+            echo "- Artifact limit per readiness type: \`${READINESS_PAGE_LIMIT_ARTIFACT_LIMIT}\`"
+            echo "- Min runs: \`${READINESS_THRESHOLD_MIN_RUNS}\`"
+            echo "- Buffer pages: \`${READINESS_ESCALATION_PAGE_LIMIT_BUFFER_PAGES}\`"
+            echo "- Min recommended open pages: \`${MIN_RECOMMENDED_OPEN_ISSUES_MAX_PAGES}\`"
+            echo "- Min recommended closed pages: \`${MIN_RECOMMENDED_CLOSED_ISSUES_MAX_PAGES}\`"
+            echo "- Allow low confidence: \`${READINESS_THRESHOLD_ALLOW_LOW_CONFIDENCE}\`"
+            echo "- Fail on low confidence: \`${READINESS_THRESHOLD_FAIL_ON_LOW_CONFIDENCE}\`"
+            echo "- Low-confidence streak threshold: \`${READINESS_LOW_CONFIDENCE_STREAK_THRESHOLD}\`"
+            echo "- Low-confidence history lookback runs: \`${READINESS_LOW_CONFIDENCE_HISTORY_LOOKBACK_RUNS}\`"
+            echo "- Low-confidence escalation open pages max: \`${READINESS_LOW_CONFIDENCE_ESCALATION_OPEN_ISSUES_MAX_PAGES}\`"
+            echo "- Low-confidence escalation closed pages max: \`${READINESS_LOW_CONFIDENCE_ESCALATION_CLOSED_ISSUES_MAX_PAGES}\`"
+            echo "- Open PR on drift: \`${READINESS_PAGE_LIMIT_OPEN_PR}\`"
+            echo "- Drift detected: \`${{ steps.calibrate.outputs.drift_detected }}\`"
+            echo "- Changes applied to workspace: \`${{ steps.calibrate.outputs.changes_applied }}\`"
+            echo "- Low-confidence guard triggered: \`${{ steps.calibrate.outputs.low_confidence_guard_triggered }}\`"
+            echo "- Low-confidence reason: \`${low_confidence_reason}\`"
+            echo "- Low-confidence escalation status: \`${{ steps.low_confidence_escalation.outputs.escalation_status }}\`"
+            echo "- Low-confidence previous streak: \`${{ steps.low_confidence_escalation.outputs.previous_low_confidence_streak }}\`"
+            echo "- Low-confidence current streak: \`${{ steps.low_confidence_escalation.outputs.current_low_confidence_streak }}\`"
+            echo "- Low-confidence escalation issue action: \`${low_confidence_escalation_issue_action}\` (issue: \`${low_confidence_escalation_issue_number}\`)"
+            echo "- Runs analyzed: \`${{ steps.calibrate.outputs.runs_analyzed }}\`"
+            echo "- Recommended open max pages: \`${{ steps.calibrate.outputs.recommended_open_issues_max_pages }}\`"
+            echo "- Recommended closed max pages: \`${{ steps.calibrate.outputs.recommended_closed_issues_max_pages }}\`"
+            echo "- PR URL: \`${pr_url}\`"
+          } >> "${GITHUB_STEP_SUMMARY}"

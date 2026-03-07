@@ -1,0 +1,204 @@
+name: Warm Generated Cache
+
+on:
+  schedule:
+    - cron: "5 0 * * *"
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: "Target date in YYYY-MM-DD (defaults to current UTC date)"
+        required: false
+        type: string
+      warmup_limit:
+        description: "Number of zodiac/MBTI combos to warm"
+        required: false
+        default: "20"
+        type: string
+      include_premium:
+        description: "Warm premium cache entries in addition to free"
+        required: false
+        default: true
+        type: boolean
+      warmup_categories:
+        description: "Comma-separated categories"
+        required: false
+        default: "Career,Love,Social,Health,Personal Growth"
+        type: string
+      warmup_lookback_days:
+        description: "Recent-day window for dynamic combo selection"
+        required: false
+        default: "30"
+        type: string
+      warmup_request_retries:
+        description: "Retries per failed warm request"
+        required: false
+        default: "1"
+        type: string
+      warmup_retry_delay_seconds:
+        description: "Base delay in seconds between warm-request retries"
+        required: false
+        default: "1"
+        type: string
+      warmup_max_retry_rate_percent:
+        description: "Fail run when retried-request rate exceeds this percent"
+        required: false
+        default: "25"
+        type: string
+
+jobs:
+  warm-cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: warm-generated-cache
+      cancel-in-progress: false
+
+    env:
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      CACHE_WARM_SECRET: ${{ secrets.CACHE_WARM_SECRET }}
+      SUPABASE_BASE_URL: ${{ secrets.SUPABASE_BASE_URL }}
+      TARGET_DATE: ${{ github.event.inputs.target_date }}
+      WARMUP_LIMIT: ${{ github.event.inputs.warmup_limit }}
+      INCLUDE_PREMIUM: ${{ github.event.inputs.include_premium }}
+      WARMUP_CATEGORIES: ${{ github.event.inputs.warmup_categories }}
+      WARMUP_LOOKBACK_DAYS: ${{ github.event.inputs.warmup_lookback_days }}
+      WARMUP_REQUEST_RETRIES: ${{ github.event.inputs.warmup_request_retries }}
+      WARMUP_RETRY_DELAY_SECONDS: ${{ github.event.inputs.warmup_retry_delay_seconds }}
+      WARMUP_MAX_RETRY_RATE_PERCENT: ${{ github.event.inputs.warmup_max_retry_rate_percent }}
+      WARMUP_METRICS_FILE: ./warm-generated-cache.metrics.json
+      WARMUP_COMBOS_GENERATED_FILE: ./ops/warmup-combos.generated.txt
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required secrets
+        run: |
+          missing=0
+          for secret_name in SUPABASE_ANON_KEY CACHE_WARM_SECRET; do
+            if [ -z "${!secret_name:-}" ]; then
+              echo "::error::Missing required repository secret: ${secret_name}"
+              missing=1
+            fi
+          done
+
+          if [ -z "${SUPABASE_PROJECT_REF:-}" ] && [ -z "${SUPABASE_BASE_URL:-}" ]; then
+            echo "::error::Provide SUPABASE_PROJECT_REF or SUPABASE_BASE_URL."
+            missing=1
+          fi
+
+          if [ "${missing}" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Resolve defaults
+        run: |
+          if [ -z "${TARGET_DATE:-}" ]; then
+            TARGET_DATE="$(date -u +%F)"
+          fi
+          if [ -z "${WARMUP_LIMIT:-}" ]; then
+            WARMUP_LIMIT="20"
+          fi
+          if [ -z "${INCLUDE_PREMIUM:-}" ]; then
+            INCLUDE_PREMIUM="true"
+          fi
+          if [ -z "${WARMUP_CATEGORIES:-}" ]; then
+            WARMUP_CATEGORIES="Career,Love,Social,Health,Personal Growth"
+          fi
+          if [ -z "${WARMUP_LOOKBACK_DAYS:-}" ]; then
+            WARMUP_LOOKBACK_DAYS="30"
+          fi
+          if [ -z "${WARMUP_REQUEST_RETRIES:-}" ]; then
+            WARMUP_REQUEST_RETRIES="1"
+          fi
+          if [ -z "${WARMUP_RETRY_DELAY_SECONDS:-}" ]; then
+            WARMUP_RETRY_DELAY_SECONDS="1"
+          fi
+          if [ -z "${WARMUP_MAX_RETRY_RATE_PERCENT:-}" ]; then
+            WARMUP_MAX_RETRY_RATE_PERCENT="25"
+          fi
+
+          echo "TARGET_DATE=${TARGET_DATE}" >> "${GITHUB_ENV}"
+          echo "WARMUP_LIMIT=${WARMUP_LIMIT}" >> "${GITHUB_ENV}"
+          echo "INCLUDE_PREMIUM=${INCLUDE_PREMIUM}" >> "${GITHUB_ENV}"
+          echo "WARMUP_CATEGORIES=${WARMUP_CATEGORIES}" >> "${GITHUB_ENV}"
+          echo "WARMUP_LOOKBACK_DAYS=${WARMUP_LOOKBACK_DAYS}" >> "${GITHUB_ENV}"
+          echo "WARMUP_REQUEST_RETRIES=${WARMUP_REQUEST_RETRIES}" >> "${GITHUB_ENV}"
+          echo "WARMUP_RETRY_DELAY_SECONDS=${WARMUP_RETRY_DELAY_SECONDS}" >> "${GITHUB_ENV}"
+          echo "WARMUP_MAX_RETRY_RATE_PERCENT=${WARMUP_MAX_RETRY_RATE_PERCENT}" >> "${GITHUB_ENV}"
+
+      - name: Build dynamic warmup combos
+        if: ${{ env.SUPABASE_SERVICE_ROLE_KEY != '' }}
+        continue-on-error: true
+        run: bash ./scripts/build-warmup-combos.sh
+
+      - name: Resolve combo source
+        run: |
+          if [ -s "${WARMUP_COMBOS_GENERATED_FILE}" ]; then
+            echo "Using generated combos from ${WARMUP_COMBOS_GENERATED_FILE}"
+            echo "WARMUP_COMBOS_FILE=${WARMUP_COMBOS_GENERATED_FILE}" >> "${GITHUB_ENV}"
+          else
+            echo "Using static combos from ./ops/warmup-combos.txt"
+            echo "WARMUP_COMBOS_FILE=./ops/warmup-combos.txt" >> "${GITHUB_ENV}"
+          fi
+
+      - name: Warm generated cache
+        run: bash ./scripts/warm-generated-cache.sh
+
+      - name: Upload warmup metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: warm-generated-cache-metrics
+          path: ${{ env.WARMUP_METRICS_FILE }}
+          if-no-files-found: ignore
+
+      - name: Append summary
+        if: always()
+        run: |
+          observed_total="(unavailable)"
+          observed_successful="(unavailable)"
+          observed_failed="(unavailable)"
+          observed_cache_hits="(unavailable)"
+          observed_retried="(unavailable)"
+          observed_retry_attempts="(unavailable)"
+          observed_retry_rate="(unavailable)"
+          observed_threshold="(unavailable)"
+          observed_outcome="(unavailable)"
+          observed_exit_code="(unavailable)"
+
+          if [ -f "${WARMUP_METRICS_FILE}" ]; then
+            observed_total="$(jq -r '.total_requests // 0' "${WARMUP_METRICS_FILE}")"
+            observed_successful="$(jq -r '.successful_requests // 0' "${WARMUP_METRICS_FILE}")"
+            observed_failed="$(jq -r '.failed_requests // 0' "${WARMUP_METRICS_FILE}")"
+            observed_cache_hits="$(jq -r '.cache_hits // 0' "${WARMUP_METRICS_FILE}")"
+            observed_retried="$(jq -r '.requests_retried // 0' "${WARMUP_METRICS_FILE}")"
+            observed_retry_attempts="$(jq -r '.retry_attempts // 0' "${WARMUP_METRICS_FILE}")"
+            observed_retry_rate="$(jq -r '.retry_rate_percent // 0' "${WARMUP_METRICS_FILE}")%"
+            observed_threshold="$(jq -r 'if .max_retry_rate_percent == null then "(disabled)" else "\(.max_retry_rate_percent)%" end' "${WARMUP_METRICS_FILE}")"
+            observed_outcome="$(jq -r '.outcome // "(unknown)"' "${WARMUP_METRICS_FILE}")"
+            observed_exit_code="$(jq -r '.exit_code // "(unknown)"' "${WARMUP_METRICS_FILE}")"
+          fi
+
+          {
+            echo "## Warm Generated Cache"
+            echo "- Target date: \`${TARGET_DATE}\`"
+            echo "- Warmup limit: \`${WARMUP_LIMIT}\`"
+            echo "- Include premium: \`${INCLUDE_PREMIUM}\`"
+            echo "- Categories: \`${WARMUP_CATEGORIES}\`"
+            echo "- Lookback days: \`${WARMUP_LOOKBACK_DAYS}\`"
+            echo "- Retries/request: \`${WARMUP_REQUEST_RETRIES}\`"
+            echo "- Retry delay seconds: \`${WARMUP_RETRY_DELAY_SECONDS}\`"
+            echo "- Max retry rate percent: \`${WARMUP_MAX_RETRY_RATE_PERCENT}\`"
+            echo "- Supabase target: \`${SUPABASE_PROJECT_REF:-${SUPABASE_BASE_URL:-"(unset)"}}\`"
+            echo "- Observed total/success/failed: \`${observed_total}\` / \`${observed_successful}\` / \`${observed_failed}\`"
+            echo "- Observed cache hits: \`${observed_cache_hits}\`"
+            echo "- Observed retried requests: \`${observed_retried}\`"
+            echo "- Observed retry attempts: \`${observed_retry_attempts}\`"
+            echo "- Observed retry rate: \`${observed_retry_rate}\`"
+            echo "- Observed retry threshold: \`${observed_threshold}\`"
+            echo "- Warmup outcome / exit code: \`${observed_outcome}\` / \`${observed_exit_code}\`"
+            echo "- Warmup metrics artifact: \`warm-generated-cache-metrics\`"
+          } >> "${GITHUB_STEP_SUMMARY}"

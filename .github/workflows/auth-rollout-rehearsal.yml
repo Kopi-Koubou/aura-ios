@@ -1,0 +1,290 @@
+name: Auth Rollout Rehearsal
+
+on:
+  workflow_dispatch:
+    inputs:
+      expect_auth_mode:
+        description: "Expected auth mode header (skip|legacy|audit|enforce)"
+        required: false
+        default: "skip"
+        type: choice
+        options:
+          - skip
+          - legacy
+          - audit
+          - enforce
+      category:
+        description: "Reading category"
+        required: false
+        default: "Career"
+        type: choice
+        options:
+          - Career
+          - Love
+          - Social
+          - Health
+          - Personal Growth
+      target_date:
+        description: "Target date in YYYY-MM-DD (defaults to current UTC date)"
+        required: false
+        type: string
+      include_readiness_gates:
+        description: "Run auth/cache readiness gates before rehearsal"
+        required: false
+        default: true
+        type: boolean
+      auth_readiness_lookback_days:
+        description: "Auth readiness lookback days (if readiness gates are enabled)"
+        required: false
+        default: "3"
+        type: string
+      auth_readiness_max_fallbacks:
+        description: "Allowed auth fallbacks (if readiness gates are enabled)"
+        required: false
+        default: "0"
+        type: string
+      auth_readiness_context_filter:
+        description: "Auth fallback context filter"
+        required: false
+        default: "all"
+        type: choice
+        options:
+          - all
+          - missing
+          - invalid
+      cache_readiness_lookback_days:
+        description: "Cache readiness lookback days (if readiness gates are enabled)"
+        required: false
+        default: "2"
+        type: string
+      cache_readiness_max_degradations:
+        description: "Allowed cache degradations (if readiness gates are enabled)"
+        required: false
+        default: "0"
+        type: string
+      cache_readiness_premium_filter:
+        description: "Cache readiness premium filter"
+        required: false
+        default: "all"
+        type: choice
+        options:
+          - all
+          - free
+          - premium
+
+permissions:
+  contents: read
+
+jobs:
+  rehearsal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: auth-rollout-rehearsal
+      cancel-in-progress: false
+
+    env:
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      SUPABASE_BASE_URL: ${{ secrets.SUPABASE_BASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      AUTH_TEST_BEARER_TOKEN: ${{ secrets.AUTH_TEST_BEARER_TOKEN }}
+      AUTH_TEST_USER_ID: ${{ secrets.AUTH_TEST_USER_ID }}
+      AUTH_TEST_USER_EMAIL: ${{ secrets.AUTH_TEST_USER_EMAIL }}
+      AUTH_TEST_USER_PASSWORD: ${{ secrets.AUTH_TEST_USER_PASSWORD }}
+      EXPECT_AUTH_MODE_INPUT: ${{ github.event.inputs.expect_auth_mode }}
+      CATEGORY_INPUT: ${{ github.event.inputs.category }}
+      TARGET_DATE_INPUT: ${{ github.event.inputs.target_date }}
+      INCLUDE_READINESS_GATES: ${{ github.event.inputs.include_readiness_gates }}
+      AUTH_READINESS_LOOKBACK_DAYS: ${{ github.event.inputs.auth_readiness_lookback_days }}
+      AUTH_READINESS_MAX_FALLBACKS: ${{ github.event.inputs.auth_readiness_max_fallbacks }}
+      AUTH_READINESS_CONTEXT_FILTER: ${{ github.event.inputs.auth_readiness_context_filter }}
+      CACHE_READINESS_LOOKBACK_DAYS: ${{ github.event.inputs.cache_readiness_lookback_days }}
+      CACHE_READINESS_MAX_DEGRADATIONS: ${{ github.event.inputs.cache_readiness_max_degradations }}
+      CACHE_READINESS_PREMIUM_FILTER: ${{ github.event.inputs.cache_readiness_premium_filter }}
+      CACHE_READINESS_REASON_FILTER: "all"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve defaults
+        run: |
+          if [ -z "${EXPECT_AUTH_MODE_INPUT:-}" ]; then
+            EXPECT_AUTH_MODE_INPUT="skip"
+          fi
+          if [ "${EXPECT_AUTH_MODE_INPUT}" = "skip" ]; then
+            echo "EXPECT_AUTH_MODE=" >> "${GITHUB_ENV}"
+          else
+            echo "EXPECT_AUTH_MODE=${EXPECT_AUTH_MODE_INPUT}" >> "${GITHUB_ENV}"
+          fi
+
+          if [ -z "${CATEGORY_INPUT:-}" ]; then
+            CATEGORY_INPUT="Career"
+          fi
+          echo "CATEGORY=${CATEGORY_INPUT}" >> "${GITHUB_ENV}"
+
+          if [ -z "${TARGET_DATE_INPUT:-}" ]; then
+            TARGET_DATE_INPUT="$(date -u +%F)"
+          fi
+          echo "TARGET_DATE=${TARGET_DATE_INPUT}" >> "${GITHUB_ENV}"
+
+          if [ -z "${INCLUDE_READINESS_GATES:-}" ]; then
+            INCLUDE_READINESS_GATES="true"
+          fi
+          echo "INCLUDE_READINESS_GATES=${INCLUDE_READINESS_GATES}" >> "${GITHUB_ENV}"
+
+          if [ -z "${AUTH_READINESS_LOOKBACK_DAYS:-}" ]; then
+            AUTH_READINESS_LOOKBACK_DAYS="3"
+          fi
+          if [ -z "${AUTH_READINESS_MAX_FALLBACKS:-}" ]; then
+            AUTH_READINESS_MAX_FALLBACKS="0"
+          fi
+          if [ -z "${AUTH_READINESS_CONTEXT_FILTER:-}" ]; then
+            AUTH_READINESS_CONTEXT_FILTER="all"
+          fi
+          if [ -z "${CACHE_READINESS_LOOKBACK_DAYS:-}" ]; then
+            CACHE_READINESS_LOOKBACK_DAYS="2"
+          fi
+          if [ -z "${CACHE_READINESS_MAX_DEGRADATIONS:-}" ]; then
+            CACHE_READINESS_MAX_DEGRADATIONS="0"
+          fi
+          if [ -z "${CACHE_READINESS_PREMIUM_FILTER:-}" ]; then
+            CACHE_READINESS_PREMIUM_FILTER="all"
+          fi
+          if [ -z "${CACHE_READINESS_REASON_FILTER:-}" ]; then
+            CACHE_READINESS_REASON_FILTER="all"
+          fi
+
+          echo "AUTH_READINESS_LOOKBACK_DAYS=${AUTH_READINESS_LOOKBACK_DAYS}" >> "${GITHUB_ENV}"
+          echo "AUTH_READINESS_MAX_FALLBACKS=${AUTH_READINESS_MAX_FALLBACKS}" >> "${GITHUB_ENV}"
+          echo "AUTH_READINESS_CONTEXT_FILTER=${AUTH_READINESS_CONTEXT_FILTER}" >> "${GITHUB_ENV}"
+          echo "CACHE_READINESS_LOOKBACK_DAYS=${CACHE_READINESS_LOOKBACK_DAYS}" >> "${GITHUB_ENV}"
+          echo "CACHE_READINESS_MAX_DEGRADATIONS=${CACHE_READINESS_MAX_DEGRADATIONS}" >> "${GITHUB_ENV}"
+          echo "CACHE_READINESS_PREMIUM_FILTER=${CACHE_READINESS_PREMIUM_FILTER}" >> "${GITHUB_ENV}"
+          echo "CACHE_READINESS_REASON_FILTER=${CACHE_READINESS_REASON_FILTER}" >> "${GITHUB_ENV}"
+
+      - name: Validate required configuration
+        run: |
+          has_static_auth=0
+          has_password_auth=0
+          missing=0
+
+          for secret_name in SUPABASE_ANON_KEY; do
+            if [ -z "${!secret_name:-}" ]; then
+              echo "::error::Missing required repository secret: ${secret_name}"
+              missing=1
+            fi
+          done
+
+          if [ -z "${SUPABASE_PROJECT_REF:-}" ] && [ -z "${SUPABASE_BASE_URL:-}" ]; then
+            echo "::error::Provide SUPABASE_PROJECT_REF or SUPABASE_BASE_URL for rehearsal endpoint resolution."
+            missing=1
+          fi
+
+          if [ -n "${AUTH_TEST_BEARER_TOKEN:-}" ] || [ -n "${AUTH_TEST_USER_ID:-}" ]; then
+            if [ -z "${AUTH_TEST_BEARER_TOKEN:-}" ] || [ -z "${AUTH_TEST_USER_ID:-}" ]; then
+              echo "::error::Set both AUTH_TEST_BEARER_TOKEN and AUTH_TEST_USER_ID, or neither."
+              missing=1
+            else
+              has_static_auth=1
+            fi
+          fi
+
+          if [ -n "${AUTH_TEST_USER_EMAIL:-}" ] || [ -n "${AUTH_TEST_USER_PASSWORD:-}" ]; then
+            if [ -z "${AUTH_TEST_USER_EMAIL:-}" ] || [ -z "${AUTH_TEST_USER_PASSWORD:-}" ]; then
+              echo "::error::Set both AUTH_TEST_USER_EMAIL and AUTH_TEST_USER_PASSWORD, or neither."
+              missing=1
+            else
+              has_password_auth=1
+            fi
+          fi
+
+          if [ "${has_static_auth}" -eq 0 ] && [ "${has_password_auth}" -eq 0 ]; then
+            echo "::error::Provide auth rehearsal credentials via static token/user-id secrets or email/password secrets."
+            missing=1
+          fi
+
+          if [ "${has_static_auth}" -eq 1 ]; then
+            echo "AUTH_SOURCE_MODE=static_token" >> "${GITHUB_ENV}"
+            if [ "${has_password_auth}" -eq 1 ]; then
+              echo "::warning::Both auth rehearsal sources are configured; static token/user-id will be used."
+            fi
+          elif [ "${has_password_auth}" -eq 1 ]; then
+            echo "AUTH_SOURCE_MODE=password_login" >> "${GITHUB_ENV}"
+          else
+            echo "AUTH_SOURCE_MODE=unresolved" >> "${GITHUB_ENV}"
+          fi
+
+          if [ "${INCLUDE_READINESS_GATES}" = "true" ] && [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo "::error::Missing required repository secret for readiness gates: SUPABASE_SERVICE_ROLE_KEY"
+            missing=1
+          fi
+
+          if [ "${missing}" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Run auth fallback readiness gate
+        if: env.INCLUDE_READINESS_GATES == 'true'
+        env:
+          LOOKBACK_DAYS: ${{ env.AUTH_READINESS_LOOKBACK_DAYS }}
+          MAX_FALLBACKS: ${{ env.AUTH_READINESS_MAX_FALLBACKS }}
+          AUTH_CONTEXT_FILTER: ${{ env.AUTH_READINESS_CONTEXT_FILTER }}
+        run: |
+          set -o pipefail
+          bash ./scripts/check-auth-fallback-readiness.sh | tee auth-fallback-readiness.log
+
+      - name: Upload auth fallback readiness log
+        if: always() && env.INCLUDE_READINESS_GATES == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth-rollout-rehearsal-auth-fallback-readiness-log
+          path: auth-fallback-readiness.log
+          if-no-files-found: ignore
+
+      - name: Run cache degradation readiness gate
+        if: env.INCLUDE_READINESS_GATES == 'true'
+        env:
+          LOOKBACK_DAYS: ${{ env.CACHE_READINESS_LOOKBACK_DAYS }}
+          MAX_DEGRADATIONS: ${{ env.CACHE_READINESS_MAX_DEGRADATIONS }}
+          PREMIUM_FILTER: ${{ env.CACHE_READINESS_PREMIUM_FILTER }}
+          REASON_FILTER: ${{ env.CACHE_READINESS_REASON_FILTER }}
+        run: |
+          set -o pipefail
+          bash ./scripts/check-cache-degradation-readiness.sh | tee cache-degradation-readiness.log
+
+      - name: Upload cache degradation readiness log
+        if: always() && env.INCLUDE_READINESS_GATES == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth-rollout-rehearsal-cache-degradation-readiness-log
+          path: cache-degradation-readiness.log
+          if-no-files-found: ignore
+
+      - name: Run auth rollout rehearsal
+        run: |
+          set -o pipefail
+          bash ./scripts/rehearse-auth-rollout.sh | tee auth-rollout-rehearsal.log
+
+      - name: Upload rehearsal log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth-rollout-rehearsal-log
+          path: auth-rollout-rehearsal.log
+          if-no-files-found: ignore
+
+      - name: Append summary
+        if: always()
+        run: |
+          {
+            echo "## Auth Rollout Rehearsal"
+            echo "- Include readiness gates: \`${INCLUDE_READINESS_GATES}\`"
+            echo "- Expected auth mode: \`${EXPECT_AUTH_MODE:-<skip>}\`"
+            echo "- Auth source mode: \`${AUTH_SOURCE_MODE:-unresolved}\`"
+            echo "- Category: \`${CATEGORY}\`"
+            echo "- Target date (UTC): \`${TARGET_DATE}\`"
+            echo "- Auth readiness: lookback=\`${AUTH_READINESS_LOOKBACK_DAYS}\`, max_fallbacks=\`${AUTH_READINESS_MAX_FALLBACKS}\`, context=\`${AUTH_READINESS_CONTEXT_FILTER}\`"
+            echo "- Cache readiness: lookback=\`${CACHE_READINESS_LOOKBACK_DAYS}\`, max_degradations=\`${CACHE_READINESS_MAX_DEGRADATIONS}\`, premium=\`${CACHE_READINESS_PREMIUM_FILTER}\`, reason=\`${CACHE_READINESS_REASON_FILTER}\`"
+          } >> "${GITHUB_STEP_SUMMARY}"

@@ -1,5 +1,8 @@
 import Foundation
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 @available(iOS 17.0, macOS 14.0, *)
 final class ShareService {
@@ -14,6 +17,7 @@ final class ShareService {
         let category: SituationCategory
         let date: Date
         let powerColors: [String]
+        let dailyMantra: String
     }
 
     func createShareData(from reading: DailyReading) -> ShareCardData? {
@@ -27,8 +31,14 @@ final class ShareService {
             fortuneScore: reading.fortuneScore,
             category: reading.category,
             date: reading.date,
-            powerColors: reading.powerColors
+            powerColors: reading.powerColors,
+            dailyMantra: reading.dailyMantra()
         )
+    }
+
+    func shareText(for reading: DailyReading) -> String? {
+        guard let data = createShareData(from: reading) else { return nil }
+        return shareText(for: data)
     }
 
     func deepLink(for reading: DailyReading) -> URL {
@@ -43,28 +53,40 @@ final class ShareService {
         return components.url ?? URL(string: "https://\(Self.universalLinkHost)")!
     }
 
+    #if os(iOS)
     @MainActor
-    func renderShareImage(data: ShareCardData, size: CGSize = CGSize(width: 390, height: 520)) -> UIImage? {
-        let view = ShareCardView(data: data)
-        let renderer = ImageRenderer(content: view.frame(width: size.width, height: size.height))
+    func renderShareImage(data: ShareCardData, colorScheme: ColorScheme = .light, width: CGFloat = 390) -> UIImage? {
+        let view = ShareCardView(data: data, colorScheme: colorScheme)
+            .frame(width: width)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(minHeight: 480)
+        let renderer = ImageRenderer(content: view)
+        renderer.proposedSize = ProposedViewSize(width: width, height: nil)
         renderer.scale = UIScreen.main.scale
         return renderer.uiImage
     }
+    #endif
 
-    func shareItems(for reading: DailyReading) async -> [Any] {
+    func shareItems(for reading: DailyReading, colorScheme: ColorScheme = .light) async -> [Any] {
         guard let data = createShareData(from: reading) else { return [] }
         var items: [Any] = []
 
         let link = deepLink(for: reading)
         items.append(link)
 
-        if let image = await renderShareImage(data: data) {
+        #if os(iOS)
+        if let image = await renderShareImage(data: data, colorScheme: colorScheme) {
             items.append(image)
         }
+        #endif
 
-        let text = "\(data.zodiacSign.symbol) My \(data.category.rawValue) fortune today: \(data.fortuneScore)% \u{2728}\nSee yours on Aura"
+        let text = shareText(for: data)
         items.append(text)
 
         return items
+    }
+
+    private func shareText(for data: ShareCardData) -> String {
+        "\(data.zodiacSign.symbol) My \(data.category.rawValue) fortune today: \(data.fortuneScore)%\n\"\(data.dailyMantra)\" \u{2728}\nSee yours on Aura"
     }
 }

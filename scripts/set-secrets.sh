@@ -56,6 +56,8 @@ if [ -z "$SUPABASE_URL" ]; then
     REVENUECAT_API_KEY=$(op item get "RevenueCat - Aura" --vault="Kato" --fields "API Key" --reveal 2>/dev/null || echo "")
     REVENUECAT_WEBHOOK_SECRET=$(op item get "RevenueCat - Aura" --vault="Kato" --fields "Webhook Secret" --reveal 2>/dev/null || echo "")
     POSTHOG_API_KEY=$(op item get "PostHog - Aura" --vault="Kato" --fields "API Key" --reveal 2>/dev/null || echo "")
+    OPENAI_API_KEY=$(op item get "OpenAI - Aura" --vault="Kato" --fields "API Key" --reveal 2>/dev/null || echo "")
+    CACHE_WARM_SECRET=$(op item get "Aura - Supabase" --vault="Kato" --fields "Cache Warm Secret" --reveal 2>/dev/null || echo "")
 fi
 
 # Set secrets
@@ -66,6 +68,9 @@ set_secret "SUPABASE_SERVICE_ROLE_KEY" "$SUPABASE_SERVICE_ROLE_KEY"
 set_secret "REVENUECAT_API_KEY" "$REVENUECAT_API_KEY"
 set_secret "REVENUECAT_WEBHOOK_SECRET" "$REVENUECAT_WEBHOOK_SECRET"
 set_secret "POSTHOG_API_KEY" "$POSTHOG_API_KEY"
+set_secret "OPENAI_API_KEY" "$OPENAI_API_KEY"
+set_secret "CACHE_WARM_SECRET" "$CACHE_WARM_SECRET"
+set_secret "GENERATE_HOROSCOPE_AUTH_MODE" "$GENERATE_HOROSCOPE_AUTH_MODE"
 
 echo ""
 echo -e "${GREEN}==========================================${NC}"
@@ -78,3 +83,6 @@ echo "  • SUPABASE_SERVICE_ROLE_KEY"
 echo "  • REVENUECAT_API_KEY"
 echo "  • REVENUECAT_WEBHOOK_SECRET"
 echo "  • POSTHOG_API_KEY"
+echo "  • OPENAI_API_KEY"
+echo "  • CACHE_WARM_SECRET"
+echo "  • GENERATE_HOROSCOPE_AUTH_MODE (optional: legacy|audit|enforce)"

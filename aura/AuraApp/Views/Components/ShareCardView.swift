@@ -3,113 +3,302 @@ import SwiftUI
 @available(iOS 17.0, macOS 14.0, *)
 struct ShareCardView: View {
     let data: ShareService.ShareCardData
+    var colorScheme: ColorScheme = .light
 
-    private var gradientColors: [Color] {
-        switch data.category {
-        case .career: return [Color(red: 0.4, green: 0.2, blue: 0.6), Color(red: 0.2, green: 0.1, blue: 0.4)]
-        case .love: return [Color(red: 0.7, green: 0.2, blue: 0.3), Color(red: 0.5, green: 0.1, blue: 0.2)]
-        case .social: return [Color(red: 0.2, green: 0.4, blue: 0.6), Color(red: 0.1, green: 0.2, blue: 0.4)]
-        case .health: return [Color(red: 0.2, green: 0.5, blue: 0.3), Color(red: 0.1, green: 0.3, blue: 0.2)]
-        case .personalGrowth: return [Color(red: 0.6, green: 0.4, blue: 0.1), Color(red: 0.4, green: 0.2, blue: 0.1)]
+    private var theme: AuraTheme { AuraTheme(colorScheme: colorScheme) }
+
+    var body: some View {
+        ZStack {
+            theme.background
+
+            VStack(alignment: .leading, spacing: 24) {
+                header
+
+                HStack(spacing: 14) {
+                    zodiacIcon
+
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(data.zodiacSign.rawValue.capitalized)
+                            .font(.system(size: 28, weight: .semibold, design: .serif))
+                            .foregroundStyle(textPrimaryColor)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.82)
+
+                        Text(data.mbtiType.rawValue)
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(textSecondaryColor)
+                            .padding(.horizontal, 10)
+                            .frame(height: 24)
+                            .background(theme.fieldBackground)
+                            .clipShape(Capsule())
+                    }
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(data.zodiacSign.rawValue.capitalized), \(data.mbtiType.rawValue)")
+
+                fortuneMeter
+
+                Text(data.readingExcerpt)
+                    .font(.body)
+                    .lineSpacing(3)
+                    .foregroundStyle(textPrimaryColor)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(6)
+
+                mantraSection
+
+                if presentationState.hasActiveRetrograde {
+                    retrogradeIndicator
+                }
+
+                if !presentationState.displayedPowerColors.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Power colors")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(textSecondaryColor)
+
+                        ViewThatFits(in: .horizontal) {
+                            HStack(spacing: 8) { powerColorChips }
+                            VStack(alignment: .leading, spacing: 8) { powerColorChips }
+                        }
+                    }
+                }
+
+                Spacer(minLength: 0)
+
+                footer
+            }
+            .padding(24)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(theme.cardBorder, lineWidth: 1)
         }
     }
 
-    var body: some View {
-        VStack(spacing: 0) {
-            // Header
-            VStack(spacing: 8) {
-                Text(data.zodiacSign.symbol)
-                    .font(.system(size: 48))
+    // MARK: - Header
 
-                Text(data.zodiacSign.rawValue.capitalized)
-                    .font(.title2.bold())
-                    .foregroundStyle(.white)
-
-                Text(data.mbtiType.rawValue)
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.white.opacity(0.8))
-            }
-            .padding(.top, 32)
-            .padding(.bottom, 16)
-
-            // Fortune score
-            HStack {
-                Text("Fortune")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.7))
-                Spacer()
-                Text("\(data.fortuneScore)%")
-                    .font(.title3.bold())
-                    .foregroundStyle(.white)
-            }
-            .padding(.horizontal, 24)
-
-            // Score bar
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(.white.opacity(0.2))
-                        .frame(height: 6)
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(.white)
-                        .frame(width: geo.size.width * CGFloat(data.fortuneScore) / 100, height: 6)
-                }
-            }
-            .frame(height: 6)
-            .padding(.horizontal, 24)
-            .padding(.top, 8)
-
-            // Reading excerpt
-            Text(data.readingExcerpt)
-                .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.9))
-                .lineLimit(5)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 24)
-                .padding(.top, 20)
+    private var header: some View {
+        HStack(alignment: .center) {
+            Label(data.category.rawValue, systemImage: data.category.icon)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(theme.accent)
+                .padding(.horizontal, 10)
+                .frame(height: 28)
+                .background(theme.accentFill())
+                .clipShape(Capsule())
 
             Spacer()
 
-            // Category + date
-            HStack {
-                Label(data.category.rawValue, systemImage: data.category.icon)
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.white.opacity(0.7))
-                Spacer()
-                Text(data.date, style: .date)
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(0.7))
-            }
-            .padding(.horizontal, 24)
+            Text(data.date, format: .dateTime.month(.abbreviated).day())
+                .font(.caption.weight(.medium))
+                .foregroundStyle(textSecondaryColor)
+        }
+    }
 
-            // Power colors
-            HStack(spacing: 8) {
-                ForEach(data.powerColors, id: \.self) { color in
-                    Text(color)
+    // MARK: - Fortune Meter
+
+    private var fortuneMeter: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Fortune")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(textSecondaryColor)
+
+                Spacer()
+
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("\(data.fortuneScore)%")
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(fortuneTint)
+                        .monospacedDigit()
+
+                    Text(presentationState.fortuneMomentumLabel)
                         .font(.caption2.weight(.medium))
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(.white.opacity(0.15))
-                        .clipShape(Capsule())
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(textSecondaryColor)
                 }
             }
-            .padding(.top, 8)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Fortune score \(data.fortuneScore) percent, \(presentationState.fortuneMomentumLabel)")
 
-            // Branding
-            HStack(spacing: 4) {
-                Image(systemName: "sparkles")
-                    .font(.caption2)
-                Text("Aura")
-                    .font(.caption.bold())
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(theme.fieldBackground)
+                        .frame(height: 10)
+
+                    Capsule()
+                        .fill(fortuneTint)
+                        .frame(
+                            width: max(10, geo.size.width * CGFloat(data.fortuneScore) / 100),
+                            height: 10
+                        )
+                }
             }
-            .foregroundStyle(.white.opacity(0.5))
-            .padding(.top, 16)
-            .padding(.bottom, 20)
+            .frame(height: 10)
+            .accessibilityHidden(true)
         }
-        .background(
-            LinearGradient(colors: gradientColors, startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+
+    // MARK: - Power Color Chips
+
+    @ViewBuilder
+    private var powerColorChips: some View {
+        ForEach(presentationState.displayedPowerColors, id: \.self) { color in
+            Text(color)
+                .font(.caption2.weight(.semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .padding(.horizontal, 10)
+                .frame(height: 24)
+                .background(theme.accentFill())
+                .clipShape(Capsule())
+                .foregroundStyle(textPrimaryColor)
+        }
+    }
+
+    // MARK: - Zodiac Icon
+
+    private var zodiacIcon: some View {
+        Text(data.zodiacSign.symbol)
+            .font(.system(size: 26))
+            .frame(width: 48, height: 48)
+            .background(
+                Circle()
+                    .fill(theme.accentFill())
+            )
+            .overlay {
+                Circle()
+                    .strokeBorder(theme.cardBorder, lineWidth: 1)
+            }
+            .accessibilityHidden(true)
+    }
+
+    // MARK: - Retrograde Indicator
+
+    private var retrogradeIndicator: some View {
+        let active = RetrogradeCatalog.activeRetrogrades
+        return HStack(spacing: 8) {
+            Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(retrogradeAmberColor)
+
+            Text(active.map { "\($0.symbol) \($0.planet)" }.joined(separator: " + ") + " Retrograde")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(textSecondaryColor)
+                .lineLimit(1)
+        }
+        .padding(.horizontal, 10)
+        .frame(height: 26)
+        .background(retrogradeAmberColor.opacity(0.10))
+        .clipShape(Capsule())
+        .accessibilityLabel(active.map { "\($0.planet) retrograde" }.joined(separator: " and "))
+    }
+
+    // MARK: - Mantra
+
+    private var mantraSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Today's intention".uppercased())
+                .font(.caption2.weight(.semibold))
+                .tracking(0.5)
+                .foregroundStyle(textSecondaryColor)
+
+            Text(data.dailyMantra)
+                .font(.system(.subheadline, design: .serif))
+                .italic()
+                .foregroundStyle(textPrimaryColor)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(theme.accentFill())
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+
+    // MARK: - Footer
+
+    private var footer: some View {
+        HStack {
+            HStack(spacing: 6) {
+                Image(systemName: "sparkles")
+                Text("Aura")
+            }
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(textSecondaryColor)
+
+            Spacer()
+
+            Text("See yours on Aura")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(theme.accent)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Shared from Aura")
+    }
+
+    // MARK: - Presentation State
+
+    private var presentationState: ShareCardPresentationState {
+        ShareCardPresentationState(
+            powerColors: data.powerColors,
+            fortuneScore: data.fortuneScore,
+            activeRetrogrades: RetrogradeCatalog.activeRetrogrades
         )
-        .clipShape(RoundedRectangle(cornerRadius: 24))
+    }
+
+    // MARK: - Colors
+
+    private var textPrimaryColor: Color { theme.textPrimary }
+    private var textSecondaryColor: Color { theme.textSecondary }
+    private var retrogradeAmberColor: Color { AuraTheme.retrogradeAmber }
+
+    private var fortuneTint: Color {
+        AuraTheme.scoreTint(for: data.fortuneScore)
+    }
+}
+
+@available(iOS 17.0, macOS 14.0, *)
+struct ShareCardPresentationState: Sendable {
+    let powerColors: [String]
+    let fortuneScore: Int
+    let activeRetrogrades: [RetrogradeEvent]
+
+    var hasActiveRetrograde: Bool {
+        !activeRetrogrades.isEmpty
+    }
+
+    private static let maxPowerColorCount = 3
+
+    var displayedPowerColors: [String] {
+        var seen = Set<String>()
+        var result: [String] = []
+
+        for rawColor in powerColors {
+            let cleaned = rawColor.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !cleaned.isEmpty else { continue }
+
+            let dedupeKey = cleaned.lowercased()
+            guard seen.insert(dedupeKey).inserted else { continue }
+
+            result.append(cleaned)
+            if result.count == Self.maxPowerColorCount {
+                break
+            }
+        }
+
+        return result
+    }
+
+    var fortuneMomentumLabel: String {
+        switch fortuneScore {
+        case 85...:
+            return "Strong momentum"
+        case 70...:
+            return "Steady momentum"
+        default:
+            return "Reflective momentum"
+        }
     }
 }

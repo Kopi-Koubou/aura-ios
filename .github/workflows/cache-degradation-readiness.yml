@@ -1,0 +1,221 @@
+name: Cache Degradation Readiness
+
+on:
+  schedule:
+    - cron: "50 0 * * *"
+  workflow_dispatch:
+    inputs:
+      lookback_days:
+        description: "Lookback window in UTC days"
+        required: false
+        default: "2"
+        type: string
+      max_degradations:
+        description: "Allowed degradation events before failure"
+        required: false
+        default: "0"
+        type: string
+      premium_filter:
+        description: "Tier filter"
+        required: false
+        default: "all"
+        type: choice
+        options:
+          - all
+          - free
+          - premium
+      reason_filter:
+        description: "Degradation reason filter"
+        required: false
+        default: "all"
+        type: choice
+        options:
+          - all
+          - shared_content_cache_unavailable
+          - generated_shared_content_cache_persist_failed
+          - generated_shared_content_cache_temporarily_unavailable
+      require_webhook_success:
+        description: "Fail if optional webhook alert cannot be delivered"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+      escalation_open_issues_max_pages:
+        description: "Max open issue pages scanned before escalation upsert"
+        required: false
+        default: "10"
+        type: string
+      escalation_closed_issues_max_pages:
+        description: "Max closed issue pages scanned before escalation upsert"
+        required: false
+        default: "10"
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  readiness-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: cache-degradation-readiness
+      cancel-in-progress: false
+
+    env:
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SUPABASE_BASE_URL: ${{ secrets.SUPABASE_BASE_URL }}
+      LOOKBACK_DAYS: ${{ github.event.inputs.lookback_days }}
+      MAX_DEGRADATIONS: ${{ github.event.inputs.max_degradations }}
+      PREMIUM_FILTER: ${{ github.event.inputs.premium_filter }}
+      REASON_FILTER: ${{ github.event.inputs.reason_filter }}
+      REQUIRE_WEBHOOK_SUCCESS_INPUT: ${{ github.event.inputs.require_webhook_success }}
+      ESCALATION_OPEN_ISSUES_MAX_PAGES_INPUT: ${{ github.event.inputs.escalation_open_issues_max_pages }}
+      ESCALATION_CLOSED_ISSUES_MAX_PAGES_INPUT: ${{ github.event.inputs.escalation_closed_issues_max_pages }}
+      CACHE_DEGRADATION_ALERT_WEBHOOK_URL: ${{ secrets.CACHE_DEGRADATION_ALERT_WEBHOOK_URL }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required secrets
+        run: |
+          missing=0
+          for secret_name in SUPABASE_SERVICE_ROLE_KEY; do
+            if [ -z "${!secret_name:-}" ]; then
+              echo "::error::Missing required repository secret: ${secret_name}"
+              missing=1
+            fi
+          done
+
+          if [ -z "${SUPABASE_PROJECT_REF:-}" ] && [ -z "${SUPABASE_BASE_URL:-}" ]; then
+            echo "::error::Provide SUPABASE_PROJECT_REF or SUPABASE_BASE_URL."
+            missing=1
+          fi
+
+          if [ "${missing}" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Resolve defaults
+        run: |
+          if [ -z "${LOOKBACK_DAYS:-}" ]; then
+            LOOKBACK_DAYS="2"
+          fi
+          if [ -z "${MAX_DEGRADATIONS:-}" ]; then
+            MAX_DEGRADATIONS="0"
+          fi
+          if [ -z "${PREMIUM_FILTER:-}" ]; then
+            PREMIUM_FILTER="all"
+          fi
+          if [ -z "${REASON_FILTER:-}" ]; then
+            REASON_FILTER="all"
+          fi
+          if [ -z "${REQUIRE_WEBHOOK_SUCCESS_INPUT:-}" ]; then
+            REQUIRE_WEBHOOK_SUCCESS_INPUT="false"
+          fi
+          if [ -z "${ESCALATION_OPEN_ISSUES_MAX_PAGES_INPUT:-}" ]; then
+            ESCALATION_OPEN_ISSUES_MAX_PAGES_INPUT="10"
+          fi
+          if [ -z "${ESCALATION_CLOSED_ISSUES_MAX_PAGES_INPUT:-}" ]; then
+            ESCALATION_CLOSED_ISSUES_MAX_PAGES_INPUT="10"
+          fi
+
+          echo "LOOKBACK_DAYS=${LOOKBACK_DAYS}" >> "${GITHUB_ENV}"
+          echo "MAX_DEGRADATIONS=${MAX_DEGRADATIONS}" >> "${GITHUB_ENV}"
+          echo "PREMIUM_FILTER=${PREMIUM_FILTER}" >> "${GITHUB_ENV}"
+          echo "REASON_FILTER=${REASON_FILTER}" >> "${GITHUB_ENV}"
+          echo "READINESS_REQUIRE_WEBHOOK_SUCCESS=${REQUIRE_WEBHOOK_SUCCESS_INPUT}" >> "${GITHUB_ENV}"
+          echo "READINESS_ESCALATION_OPEN_ISSUES_MAX_PAGES=${ESCALATION_OPEN_ISSUES_MAX_PAGES_INPUT}" >> "${GITHUB_ENV}"
+          echo "READINESS_ESCALATION_CLOSED_ISSUES_MAX_PAGES=${ESCALATION_CLOSED_ISSUES_MAX_PAGES_INPUT}" >> "${GITHUB_ENV}"
+
+      - name: Run readiness gate
+        run: |
+          set -o pipefail
+          bash ./scripts/check-cache-degradation-readiness.sh | tee cache-degradation-readiness.log
+
+      - name: Upload readiness log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cache-degradation-readiness-log
+          path: cache-degradation-readiness.log
+          if-no-files-found: ignore
+
+      - name: Run escalation actions (webhook + issue upsert)
+        id: escalate_failure
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ALERT_WEBHOOK_URL: ${{ secrets.CACHE_DEGRADATION_ALERT_WEBHOOK_URL }}
+          READINESS_ESCALATION_KIND: cache_degradation
+          READINESS_LOG_FILE: cache-degradation-readiness.log
+          READINESS_ESCALATION_REQUIRE_WEBHOOK_SUCCESS: ${{ env.READINESS_REQUIRE_WEBHOOK_SUCCESS }}
+          READINESS_ESCALATION_OPEN_ISSUES_MAX_PAGES: ${{ env.READINESS_ESCALATION_OPEN_ISSUES_MAX_PAGES }}
+          READINESS_ESCALATION_CLOSED_ISSUES_MAX_PAGES: ${{ env.READINESS_ESCALATION_CLOSED_ISSUES_MAX_PAGES }}
+          READINESS_ESCALATION_METRICS_FILE: cache-degradation-readiness.failure.escalation.metrics.json
+        run: |
+          bash ./scripts/run-readiness-escalation.sh
+
+      - name: Resolve escalation issue on recovery
+        id: escalate_recovery
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          READINESS_ESCALATION_KIND: cache_degradation
+          READINESS_ESCALATION_STATUS: recovered
+          READINESS_LOG_FILE: cache-degradation-readiness.log
+          READINESS_ESCALATION_OPEN_ISSUES_MAX_PAGES: ${{ env.READINESS_ESCALATION_OPEN_ISSUES_MAX_PAGES }}
+          READINESS_ESCALATION_CLOSED_ISSUES_MAX_PAGES: ${{ env.READINESS_ESCALATION_CLOSED_ISSUES_MAX_PAGES }}
+          READINESS_ESCALATION_METRICS_FILE: cache-degradation-readiness.recovery.escalation.metrics.json
+        run: |
+          bash ./scripts/run-readiness-escalation.sh
+
+      - name: Upload escalation metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cache-degradation-readiness-escalation-metrics
+          path: |
+            cache-degradation-readiness.failure.escalation.metrics.json
+            cache-degradation-readiness.recovery.escalation.metrics.json
+          if-no-files-found: ignore
+
+      - name: Append summary
+        if: always()
+        env:
+          FAILURE_ESCALATION_ACTION: ${{ steps.escalate_failure.outputs.issue_action }}
+          FAILURE_ESCALATION_NUMBER: ${{ steps.escalate_failure.outputs.issue_number }}
+          FAILURE_OPEN_PAGES_SCANNED: ${{ steps.escalate_failure.outputs.open_pages_scanned }}
+          FAILURE_OPEN_MATCH_PAGE: ${{ steps.escalate_failure.outputs.open_match_page }}
+          FAILURE_CLOSED_PAGES_SCANNED: ${{ steps.escalate_failure.outputs.closed_pages_scanned }}
+          FAILURE_CLOSED_MATCH_PAGE: ${{ steps.escalate_failure.outputs.closed_match_page }}
+          RECOVERY_ESCALATION_ACTION: ${{ steps.escalate_recovery.outputs.issue_action }}
+          RECOVERY_ESCALATION_NUMBER: ${{ steps.escalate_recovery.outputs.issue_number }}
+          RECOVERY_OPEN_PAGES_SCANNED: ${{ steps.escalate_recovery.outputs.open_pages_scanned }}
+          RECOVERY_OPEN_MATCH_PAGE: ${{ steps.escalate_recovery.outputs.open_match_page }}
+          RECOVERY_CLOSED_PAGES_SCANNED: ${{ steps.escalate_recovery.outputs.closed_pages_scanned }}
+          RECOVERY_CLOSED_MATCH_PAGE: ${{ steps.escalate_recovery.outputs.closed_match_page }}
+        run: |
+          {
+            echo "## Generate Horoscope Shared Cache Degradation Readiness"
+            echo "- Lookback days: \`${LOOKBACK_DAYS}\`"
+            echo "- Max degradations: \`${MAX_DEGRADATIONS}\`"
+            echo "- Premium filter: \`${PREMIUM_FILTER}\`"
+            echo "- Reason filter: \`${REASON_FILTER}\`"
+            echo "- Supabase target: \`${SUPABASE_PROJECT_REF:-${SUPABASE_BASE_URL:-"(unset)"}}\`"
+            echo "- Workflow run date (UTC): \`$(date -u +%F)\`"
+            echo "- Require webhook success: \`${READINESS_REQUIRE_WEBHOOK_SUCCESS}\`"
+            echo "- Escalation open pages max: \`${READINESS_ESCALATION_OPEN_ISSUES_MAX_PAGES}\`"
+            echo "- Escalation closed pages max: \`${READINESS_ESCALATION_CLOSED_ISSUES_MAX_PAGES}\`"
+            echo "- Failure escalation action: \`${FAILURE_ESCALATION_ACTION:-skipped}\` (issue: \`${FAILURE_ESCALATION_NUMBER:-n/a}\`)"
+            echo "- Failure scan depth: open pages \`${FAILURE_OPEN_PAGES_SCANNED:-n/a}\`, open match page \`${FAILURE_OPEN_MATCH_PAGE:-n/a}\`, closed pages \`${FAILURE_CLOSED_PAGES_SCANNED:-n/a}\`, closed match page \`${FAILURE_CLOSED_MATCH_PAGE:-n/a}\`"
+            echo "- Recovery escalation action: \`${RECOVERY_ESCALATION_ACTION:-skipped}\` (issue: \`${RECOVERY_ESCALATION_NUMBER:-n/a}\`)"
+            echo "- Recovery scan depth: open pages \`${RECOVERY_OPEN_PAGES_SCANNED:-n/a}\`, open match page \`${RECOVERY_OPEN_MATCH_PAGE:-n/a}\`, closed pages \`${RECOVERY_CLOSED_PAGES_SCANNED:-n/a}\`, closed match page \`${RECOVERY_CLOSED_MATCH_PAGE:-n/a}\`"
+            echo "- Escalation: optional webhook (\`CACHE_DEGRADATION_ALERT_WEBHOOK_URL\`) + GitHub issue upsert on failure, auto-close on recovery"
+            echo "- Escalation metrics artifact: \`cache-degradation-readiness-escalation-metrics\`"
+          } >> "${GITHUB_STEP_SUMMARY}"

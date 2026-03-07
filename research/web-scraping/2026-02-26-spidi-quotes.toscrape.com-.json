@@ -1,0 +1,30 @@
+[
+  {
+    "url": "https://quotes.toscrape.com/",
+    "status": 200,
+    "title": "Quotes to Scrape",
+    "snippet": "Quotes to Scrape Login “The world as we have created it is a process of our thinking. It cannot be changed without changing our thinking.” by Albert Einstein (about) Tags: change deep-thoughts thinking world “It is our choices, Harry, that show what we truly are, far more than our abilities.” by J.K. Rowling (about) Tags: abilities choices “There are only two ways to live your life. One is as though nothing is a miracle. The other is as though everything is a miracle.” by Albert Einstein (about) Tags: inspirational life live miracle miracles “The person, be it gentleman or lady, who has not pleasure in a good novel, must be intolerably stupid.” by Jane Austen (about) Tags: aliteracy books classic humor “Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring.” by Marilyn Monroe",
+    "links": [
+      "https://quotes.toscrape.com/",
+      "https://quotes.toscrape.com/login",
+      "https://quotes.toscrape.com/author/Albert-Einstein",
+      "https://quotes.toscrape.com/tag/change/page/1/",
+      "https://quotes.toscrape.com/tag/deep-thoughts/page/1/",
+      "https://quotes.toscrape.com/tag/thinking/page/1/",
+      "https://quotes.toscrape.com/tag/world/page/1/",
+      "https://quotes.toscrape.com/author/J-K-Rowling",
+      "https://quotes.toscrape.com/tag/abilities/page/1/",
+      "https://quotes.toscrape.com/tag/choices/page/1/",
+      "https://quotes.toscrape.com/author/Albert-Einstein",
+      "https://quotes.toscrape.com/tag/inspirational/page/1/",
+      "https://quotes.toscrape.com/tag/life/page/1/",
+      "https://quotes.toscrape.com/tag/live/page/1/",
+      "https://quotes.toscrape.com/tag/miracle/page/1/",
+      "https://quotes.toscrape.com/tag/miracles/page/1/",
+      "https://quotes.toscrape.com/author/Jane-Austen",
+      "https://quotes.toscrape.com/tag/aliteracy/page/1/",
+      "https://quotes.toscrape.com/tag/books/page/1/",
+      "https://quotes.toscrape.com/tag/classic/page/1/"
+    ]
+  }
+]

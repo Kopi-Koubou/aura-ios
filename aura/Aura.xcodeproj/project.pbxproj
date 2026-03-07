@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0F642F80DC3B107D9AC047EA /* CategorySelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CD51B1A159E84E8C618E79 /* CategorySelector.swift */; };
-		17A7D39E9CE9B528E8414F82 /* PaywallComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = B93E5C4B538DC9ECB8C53060 /* PaywallComponents.swift */; };
 		23A89EB3ED7499DBAA164EC4 /* FortuneCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827BF71E23D776B58B191B5D /* FortuneCard.swift */; };
 		2465C5682E905304DC28F7FD /* AuraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055DF2709E86A2947D0C001E /* AuraApp.swift */; };
 		26696949D1CE63593AC574CA /* SubscriptionTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A09BAC0F10DBD03A2DF9860B /* SubscriptionTier.swift */; };
@@ -39,6 +38,11 @@
 		CC3D4E5F6A7B8C9D0E1F2A3B /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4E5F6A7B8C9D0E1F2A3B4C /* ShareService.swift */; };
 		EE5F6A7B8C9D0E1F2A3B4C5D /* ShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6A7B8C9D0E1F2A3B4C5D6E /* ShareCardView.swift */; };
 		117B8C9D0E1F2A3B4C5D6E7F /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 228C9D0E1F2A3B4C5D6E7F80 /* RevenueCat */; };
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* AuraTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F6A7B8C9D0E1F2A3 /* AuraTheme.swift */; };
+		D4E5F6A7B8C9D0E1F2A3B4C5 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F6A7B8C9D0E1F2A3B4 /* AnalyticsService.swift */; };
+		77C04A5B6C7D8E9F0A1B2C3D /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = 66BF3A4B5C6D7E8F9A0B1C2D /* PostHog */; };
+		F1A2B3C4D5E6F7081920A1B2 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B2C3D4E5F6A7089102B3C4 /* HistoryView.swift */; };
+		A2B3C4D5E6F70819202A3B4C /* RetrogradeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C4D5E6F7081920A2B3C4D5 /* RetrogradeCatalog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,7 +70,6 @@
 		A09BAC0F10DBD03A2DF9860B /* SubscriptionTier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionTier.swift; sourceTree = "<group>"; };
 		A39A6A19C5C625167CC286B2 /* MBTIType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBTIType.swift; sourceTree = "<group>"; };
 		B87097567830DDC9EB3336A7 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
-		B93E5C4B538DC9ECB8C53060 /* PaywallComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallComponents.swift; sourceTree = "<group>"; };
 		C066E7CBD4F42616716E850F /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		D01B230093D702EEA5E2DBA8 /* ZodiacSign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZodiacSign.swift; sourceTree = "<group>"; };
 		E02B3F0C1EE06B5C7412B270 /* WeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekView.swift; sourceTree = "<group>"; };
@@ -76,12 +79,17 @@
 		BB2C3D4E5F6A7B8C9D0E1F2A /* ContentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentService.swift; sourceTree = "<group>"; };
 		DD4E5F6A7B8C9D0E1F2A3B4C /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		FF6A7B8C9D0E1F2A3B4C5D6E /* ShareCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCardView.swift; sourceTree = "<group>"; };
+		B2C3D4E5F6A7B8C9D0E1F2A3 /* AuraTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuraTheme.swift; sourceTree = "<group>"; };
+		C3D4E5F6A7B8C9D0E1F2A3B4 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
+		E1B2C3D4E5F6A7089102B3C4 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		B3C4D5E6F7081920A2B3C4D5 /* RetrogradeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrogradeCatalog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		15FC75812B4FD35D3B99F39A /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				C3D4E5F6A7B8C9D0E1F2A3B4 /* AnalyticsService.swift */,
 				73F70B0B23596E937471E776 /* AuthService.swift */,
 				BB2C3D4E5F6A7B8C9D0E1F2A /* ContentService.swift */,
 				6E9452864A224FB2DAC9597A /* OpenAIService.swift */,
@@ -127,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				7E6A64F6AE3E514A95E3B512 /* AppError.swift */,
+				B2C3D4E5F6A7B8C9D0E1F2A3 /* AuraTheme.swift */,
 				14A39D6016987A37E702F7DE /* Secrets.swift */,
 			);
 			path = Utilities;
@@ -137,6 +146,7 @@
 			children = (
 				60D06F9183FAC2DF18D68838 /* DailyReading.swift */,
 				5A201B8ADE6C484679A711A4 /* MBTIResult.swift */,
+				B3C4D5E6F7081920A2B3C4D5 /* RetrogradeCatalog.swift */,
 				A39A6A19C5C625167CC286B2 /* MBTIType.swift */,
 				94CDE65A490458151F3DAE86 /* SituationCategory.swift */,
 				225A364F2902B22E633BB0BD /* SubscriptionStatus.swift */,
@@ -151,6 +161,7 @@
 		DE68B6156B222EA7512DA8FA /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E1B2C3D4E5F6A7089102B3C4 /* HistoryView.swift */,
 				59D7CFDD5BF6A734199011EB /* OnboardingView.swift */,
 				319E49DC56AD0BFACCA204C9 /* PaywallView.swift */,
 				400ED741EFE4991F21E9C468 /* PremiumFeaturesView.swift */,
@@ -168,7 +179,6 @@
 			children = (
 				F5CD51B1A159E84E8C618E79 /* CategorySelector.swift */,
 				827BF71E23D776B58B191B5D /* FortuneCard.swift */,
-				B93E5C4B538DC9ECB8C53060 /* PaywallComponents.swift */,
 				65E1C0D27DBD40ADD27647BB /* ReadingCard.swift */,
 				FF6A7B8C9D0E1F2A3B4C5D6E /* ShareCardView.swift */,
 			);
@@ -191,6 +201,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				117B8C9D0E1F2A3B4C5D6E7F /* RevenueCat in Frameworks */,
+				77C04A5B6C7D8E9F0A1B2C3D /* PostHog in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,6 +219,7 @@
 			name = Aura;
 			packageProductDependencies = (
 				228C9D0E1F2A3B4C5D6E7F80 /* RevenueCat */,
+				66BF3A4B5C6D7E8F9A0B1C2D /* PostHog */,
 			);
 			productName = Aura;
 			productReference = 4A9E59AC258B2C2BA91E5EF7 /* Aura.app */;
@@ -234,6 +246,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				449D1E2F3A4B5C6D7E8F9A0B /* XCRemoteSwiftPackageReference "purchases-ios" */,
+				55AE2F3A4B5C6D7E8F9A0B1C /* XCRemoteSwiftPackageReference "posthog-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
@@ -249,19 +262,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4E5F6A7B8C9D0E1F2A3B4C5 /* AnalyticsService.swift in Sources */,
 				7691DD6E8E2CE2D50E569B68 /* AppError.swift in Sources */,
 				5BB7295B3A14CEBD8FCEAE31 /* AppState.swift in Sources */,
 				2465C5682E905304DC28F7FD /* AuraApp.swift in Sources */,
+				A1B2C3D4E5F6A7B8C9D0E1F2 /* AuraTheme.swift in Sources */,
 				52896F5AB2F1B8AE0EED8428 /* AuthService.swift in Sources */,
 				0F642F80DC3B107D9AC047EA /* CategorySelector.swift in Sources */,
 				AA1B2C3D4E5F6A7B8C9D0E1F /* ContentService.swift in Sources */,
 				F3191A3BE76D7B184BD92C95 /* DailyReading.swift in Sources */,
 				23A89EB3ED7499DBAA164EC4 /* FortuneCard.swift in Sources */,
+				A2B3C4D5E6F70819202A3B4C /* RetrogradeCatalog.swift in Sources */,
+				F1A2B3C4D5E6F7081920A1B2 /* HistoryView.swift in Sources */,
 				A14C77EB21B31CE4621D8B9A /* MBTIResult.swift in Sources */,
 				99A74BD14B313CAEF8C02EF3 /* MBTIType.swift in Sources */,
 				9BE6CCBDDB159CB0297D84A5 /* OnboardingView.swift in Sources */,
 				A059653B5F85655FBB99A868 /* OpenAIService.swift in Sources */,
-				17A7D39E9CE9B528E8414F82 /* PaywallComponents.swift in Sources */,
 				9FB0430557183C8326440854 /* PaywallView.swift in Sources */,
 				DADD10EAB766F796355EC0ED /* PremiumFeaturesView.swift in Sources */,
 				DC0182963093583DE499F267 /* ProfileView.swift in Sources */,
@@ -292,14 +308,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = AuraApp/Aura.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_HOROSCOPE_AUTH_MODE = audit;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AuraApp/Info.plist;
+				INFOPLIST_KEY_GENERATE_HOROSCOPE_AUTH_MODE = "$(GENERATE_HOROSCOPE_AUTH_MODE)";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.xadev.aura;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kopikoubou.aura;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -312,14 +330,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = AuraApp/Aura.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_HOROSCOPE_AUTH_MODE = audit;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AuraApp/Info.plist;
+				INFOPLIST_KEY_GENERATE_HOROSCOPE_AUTH_MODE = "$(GENERATE_HOROSCOPE_AUTH_MODE)";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.xadev.aura;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kopikoubou.aura;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -475,6 +495,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		55AE2F3A4B5C6D7E8F9A0B1C /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PostHog/posthog-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -482,6 +510,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 449D1E2F3A4B5C6D7E8F9A0B /* XCRemoteSwiftPackageReference "purchases-ios" */;
 			productName = RevenueCat;
+		};
+		66BF3A4B5C6D7E8F9A0B1C2D /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 55AE2F3A4B5C6D7E8F9A0B1C /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

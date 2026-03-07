@@ -10,6 +10,14 @@ struct AuraApp: App {
 
     init() {
         SubscriptionManager.shared.configure()
+
+        let posthogKey = Secrets.posthogAPIKey
+        if !posthogKey.isEmpty {
+            AnalyticsService.shared.configure(
+                apiKey: posthogKey,
+                host: Secrets.posthogHost
+            )
+        }
     }
 
     var body: some Scene {
@@ -21,7 +29,7 @@ struct AuraApp: App {
                     // ContentService setup happens via modelContainer callback
                 }
         }
-        .modelContainer(for: [UserProfile.self, DailyReading.self, MBTIResult.self, SubscriptionStatus.self]) { result in
+        .modelContainer(for: [UserProfile.self, DailyReading.self, MBTIResult.self, SubscriptionStatus.self, PendingSyncOperation.self]) { result in
             if case .success(let container) = result {
                 let context = container.mainContext
                 appState.setup(modelContext: context)

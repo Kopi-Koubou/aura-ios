@@ -35,3 +35,5 @@ fastlane/test_output
 .env
 .env.local
 node_modules/
+ops/warmup-combos.generated.txt
+aura/ops/warmup-combos.generated.txt

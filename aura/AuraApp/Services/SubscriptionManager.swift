@@ -31,7 +31,17 @@ final class SubscriptionManager: NSObject, ObservableObject {
         super.init()
     }
 
+    private var isPurchasesConfigured: Bool {
+        Purchases.isConfigured
+    }
+
     func configure() {
+        if isPurchasesConfigured {
+            Purchases.shared.delegate = self
+            Task { await refreshStatus() }
+            return
+        }
+
         let apiKey = Secrets.revenueCatAPIKey
         guard !apiKey.isEmpty else { return }
 
@@ -46,6 +56,7 @@ final class SubscriptionManager: NSObject, ObservableObject {
     }
 
     func identify(userId: String) async {
+        guard isPurchasesConfigured else { return }
         do {
             let (info, _) = try await Purchases.shared.logIn(userId)
             await updateFrom(customerInfo: info)
@@ -55,6 +66,7 @@ final class SubscriptionManager: NSObject, ObservableObject {
     }
 
     func refreshStatus() async {
+        guard isPurchasesConfigured else { return }
         do {
             let info = try await Purchases.shared.customerInfo()
             await updateFrom(customerInfo: info)
@@ -63,16 +75,29 @@ final class SubscriptionManager: NSObject, ObservableObject {
         }
     }
 
-    func fetchOfferings() async {
+    @discardableResult
+    func fetchOfferings() async -> Bool {
+        guard isPurchasesConfigured else { return false }
         do {
             let fetched = try await Purchases.shared.offerings()
-            await MainActor.run { self.offerings = fetched }
+            await MainActor.run {
+                offerings = fetched
+                purchaseError = nil
+            }
+            return true
         } catch {
-            purchaseError = error.localizedDescription
+            await MainActor.run {
+                purchaseError = error.localizedDescription
+            }
+            return false
         }
     }
 
     func purchase(package: Package) async throws -> Bool {
+        guard isPurchasesConfigured else {
+            throw AppError.purchaseFailed
+        }
+
         await MainActor.run {
             isLoading = true
             purchaseError = nil
@@ -106,6 +131,10 @@ final class SubscriptionManager: NSObject, ObservableObject {
     }
 
     func restorePurchases() async throws {
+        guard isPurchasesConfigured else {
+            throw AppError.purchaseFailed
+        }
+
         await MainActor.run { isLoading = true }
         defer { Task { @MainActor in isLoading = false } }
 
@@ -123,6 +152,22 @@ final class SubscriptionManager: NSObject, ObservableObject {
         offerings?.current?.availablePackages.first {
             $0.storeProduct.productIdentifier == SubscriptionProduct.yearly.rawValue
         }
+    }
+
+    var premiumEntitlement: EntitlementInfo? {
+        customerInfo?.entitlements[Self.entitlementID]
+    }
+
+    var subscriptionExpirationDate: Date? {
+        premiumEntitlement?.expirationDate
+    }
+
+    var managementURL: URL? {
+        customerInfo?.managementURL
+    }
+
+    var activeProductIdentifier: String? {
+        premiumEntitlement?.productIdentifier
     }
 
     @MainActor
